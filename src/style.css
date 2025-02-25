@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
+  color-scheme: light dark;
+}
+
+@theme {
+  --color-theme-surface-0: var(--color-theme-surface-0);
+  --color-theme-surface-1: var(--color-theme-surface-1);
+  --color-theme-surface-2: var(--color-theme-surface-2);
+  --color-theme-surface-3: var(--color-theme-surface-3);
+  --color-theme-primary: var(--color-theme-primary);
+}
+
+/* catppuccin mocha theme */
+.catppuccin {
+  --color-theme-surface-0: #181825;
+  --color-theme-surface-1: #1E1E2E;
+  --color-theme-surface-2: #313244;
+  --color-theme-surface-3: #45475a;
+  --color-theme-primary: #CBA6F7;
+}
+
+/* nord theme */
+.nord {
+  --color-theme-surface-0: #2E3440;
+  --color-theme-surface-1: #3B4252;
+  --color-theme-surface-2: #434C5E;
+  --color-theme-surface-3: #4C566A;
+  --color-theme-primary: #81A1C1;
+}
+
+/* kanagawa theme */
+.kanagawa {
+  --color-theme-surface-0: #1F2430;
+  --color-theme-surface-1: #2E3440;
+  --color-theme-surface-2: #3B4252;
+  --color-theme-surface-3: #434C5E;
+  --color-theme-primary: #8FBCBB;
+}
+
+/* dracula theme */
+.dracula {
+  --color-theme-surface-0: #282A36;
+  --color-theme-surface-1: #44475A;
+  --color-theme-surface-2: #6272A4;
+  --color-theme-surface-3: #6272A4;
+  --color-theme-primary: #BD93F9;
 }
