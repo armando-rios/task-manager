@@ -1,4 +1,5 @@
 import { showModal } from "../components/Modal.js"
+import { createProject } from "./storage.js"
 const sidebar = document.querySelector("#sidebar")
 const sidebarButton = document.querySelector("#sidebar-button")
 const closeSidebar = document.querySelector("#close-sidebar")
@@ -26,9 +27,9 @@ closeSidebar.addEventListener("click", () => {
 })
 
 // Create Project Modal
-const createProject = document.querySelector("#create-project")
+const createProjectButton = document.querySelector("#create-project-btn")
 
-createProject.addEventListener("click", () => {
+createProjectButton.addEventListener("click", () => {
   showModal("Create Project", `
       <input placeholder="Project Name" type="text" name="project-name" id="project-name" class="border p-2 rounded">
       <input placeholder="Project Description" type="text" name="project-description" id="project-description" class="border p-2 rounded">
@@ -39,6 +40,9 @@ createProject.addEventListener("click", () => {
     e.preventDefault()
     const projectName = document.querySelector("#project-name").value
     const projectDescription = document.querySelector("#project-description").value
-    console.log(projectName, projectDescription)
+    createProject(projectName, projectDescription)
+
+    const modal = document.querySelector("#modal")
+    modal.remove()
   })
 })
