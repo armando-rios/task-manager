@@ -16,13 +16,6 @@ export const showModal = (title, children) => {
   form.innerHTML = children
   content.appendChild(form)
 
-  // content.innerHTML = `
-  //   <h2 class="text-xl text-theme-primary font-bold">${title}</h2>
-  //   <form class="flex flex-col gap-4" id="${title.toLowerCase().replace(" ", "-")}-form">
-  //     ${children}
-  //   </form>
-  // `
-
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       modal.remove()
