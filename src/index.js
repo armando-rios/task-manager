@@ -1,5 +1,12 @@
 import "./style.css"
-import "./utils/buttonActions.js"
 import { renderProjects } from "./views/renderProjects.js"
+import { initSidebarController } from "./controllers/sidebarController.js"
+import { initProjectModalController } from "./controllers/projectModalController.js"
+import { initProjectListController } from "./controllers/projectListController.js"
 
-renderProjects()
+document.addEventListener("DOMContentLoaded", () => {
+  renderProjects()
+  initSidebarController()
+  initProjectModalController()
+  initProjectListController()
+})

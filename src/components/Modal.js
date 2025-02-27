@@ -1,4 +1,4 @@
-export const showModal = (title, children) => {
+export const Modal = (title, children) => {
   const modal = document.createElement("div")
   modal.className = "fixed inset-0 bg-theme-surface-1/50 flex justify-center items-center z-50"
   modal.id = "modal"
