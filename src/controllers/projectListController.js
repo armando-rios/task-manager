@@ -1,5 +1,6 @@
 import { Project } from "../components/Project.js"
 import { renderProjects } from "../views/renderProjects.js"
+import { renderTasks } from "../views/renderTasks.js"
 
 export function initProjectListController () {
   const projectList = document.querySelector("#projects")
@@ -20,7 +21,7 @@ export function initProjectListController () {
 
       if (project) {
         document.getElementById("project-tasks").innerHTML = ""
-        document.getElementById("project-tasks").append(Project(project))
+        document.getElementById("project-tasks").append(...Project(project))
         renderProjects(projects, id)
       }
     } catch (error) {
