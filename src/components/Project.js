@@ -15,7 +15,7 @@ export const Project = (project) => {
 
   const createTaskBtn = document.createElement("button")
   createTaskBtn.className = "bg-theme-primary h-fit text-theme-surface-0 font-bold py-2 px-4 rounded"
-  createTaskBtn.id = "create-project-btn"
+  createTaskBtn.id = "create-task-btn"
   createTaskBtn.textContent = "Create Task"
 
   titleContainer.append(title)
