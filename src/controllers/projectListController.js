@@ -19,7 +19,8 @@ export function initProjectListController () {
       const project = projects.find(project => project.id === id)
 
       if (project) {
-        document.getElementById("project-tasks").innerHTML = Project(project)
+        document.getElementById("project-tasks").innerHTML = ""
+        document.getElementById("project-tasks").append(Project(project))
         renderProjects(projects, id)
       }
     } catch (error) {
