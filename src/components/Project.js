@@ -1,10 +1,10 @@
 export const Project = (project) => {
   const projectTasksContainer = document.createElement("div")
   projectTasksContainer.id = "tasks-container"
-  projectTasksContainer.className = "flex flex-col gap-4"
+  projectTasksContainer.className = "flex flex-col gap-4 overflow-y-auto flex-1 min-h-0"
 
   const projectHeader = document.createElement("div")
-  projectHeader.className = "flex justify-between items-center"
+  projectHeader.className = "flex justify-between items-center mb-4 flex-shrink-0"
 
   const titleContainer = document.createElement("div")
   const title = document.createElement("h2")

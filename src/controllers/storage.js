@@ -1,4 +1,5 @@
 import { renderProjects } from "../views/renderProjects.js"
+import { renderTasks } from "../views/renderTasks.js"
 import Project from "../models/Project.js"
 import Task from "../models/Task.js"
 
@@ -15,5 +16,5 @@ export const createTask = ({ projectId, title, description, priority, dueDate })
   const task = new Task({ title, description, projectId, priority, dueDate })
   tasks.push(task)
   localStorage.setItem("tasks", JSON.stringify(tasks))
-  // renderTasks(projectId)
+  renderTasks(projectId)
 }
