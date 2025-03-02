@@ -1,6 +1,7 @@
 export default class Task {
   constructor ({ title, description = "", status = "pending", projectId, priority = "medium", dueDate = null }) {
-    this.id = projectId
+    this.id = Date.now().toString()
+    this.projectId = projectId
     this.title = title
     this.description = description
     this.dueDate = dueDate
