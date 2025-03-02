@@ -13,6 +13,8 @@
   --color-theme-priority-low: var(--color-theme-priority-low);
   --color-theme-priority-medium: var(--color-theme-priority-medium);
   --color-theme-priority-high: var(--color-theme-priority-high);
+  --color-theme-text-0: var(--color-theme-text-0);
+  --color-theme-text-1: var(--color-theme-text-1);
 }
 
 /* catppuccin mocha theme */
@@ -25,6 +27,8 @@
   --color-theme-priority-low: #a6e3a1;
   --color-theme-priority-medium: #f9e2af;
   --color-theme-priority-high: #f38ba8;
+  --color-theme-text-0: #cdd6f4;
+  --color-theme-text-1: #a6adc8;
 }
 
 /* kanagawa theme */
