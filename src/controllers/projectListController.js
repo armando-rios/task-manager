@@ -1,7 +1,7 @@
 import { Project } from "../components/Project.js"
+import { renderTasks } from "../views/renderTasks.js"
 import { renderProjects } from "../views/renderProjects.js"
 import { showCreateTaskModal } from "./taskModalController.js"
-// import { renderTasks } from "../views/renderTasks.js"
 
 export function initProjectListController () {
   const projectList = document.querySelector("#projects")
@@ -24,6 +24,7 @@ export function initProjectListController () {
         document.getElementById("project-tasks").innerHTML = ""
         document.getElementById("project-tasks").append(...Project(project))
         renderProjects(projects, id)
+        renderTasks(id)
         const createTaskButton = document.querySelector("#create-task-btn")
         createTaskButton.addEventListener("click", () => {
           showCreateTaskModal(id)
