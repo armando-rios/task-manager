@@ -10,6 +10,9 @@
   --color-theme-surface-2: var(--color-theme-surface-2);
   --color-theme-surface-3: var(--color-theme-surface-3);
   --color-theme-primary: var(--color-theme-primary);
+  --color-theme-priority-low: var(--color-theme-priority-low);
+  --color-theme-priority-medium: var(--color-theme-priority-medium);
+  --color-theme-priority-high: var(--color-theme-priority-high);
 }
 
 /* catppuccin mocha theme */
@@ -19,31 +22,19 @@
   --color-theme-surface-2: #313244;
   --color-theme-surface-3: #45475a;
   --color-theme-primary: #CBA6F7;
-}
-
-/* nord theme */
-.nord {
-  --color-theme-surface-0: #2E3440;
-  --color-theme-surface-1: #3B4252;
-  --color-theme-surface-2: #434C5E;
-  --color-theme-surface-3: #4C566A;
-  --color-theme-primary: #81A1C1;
+  --color-theme-priority-low: #a6e3a1;
+  --color-theme-priority-medium: #f9e2af;
+  --color-theme-priority-high: #f38ba8;
 }
 
 /* kanagawa theme */
 .kanagawa {
-  --color-theme-surface-0: #1F2430;
-  --color-theme-surface-1: #2E3440;
-  --color-theme-surface-2: #3B4252;
-  --color-theme-surface-3: #434C5E;
-  --color-theme-primary: #8FBCBB;
-}
-
-/* dracula theme */
-.dracula {
-  --color-theme-surface-0: #282A36;
-  --color-theme-surface-1: #44475A;
-  --color-theme-surface-2: #6272A4;
-  --color-theme-surface-3: #6272A4;
-  --color-theme-primary: #BD93F9;
+  --color-theme-surface-0: #1F1F28;
+  --color-theme-surface-1: #2E2E38;
+  --color-theme-surface-2: #3E3E4A;
+  --color-theme-surface-3: #4E4E5A;
+  --color-theme-primary: #B4BEFE;
+  --color-theme-priority-low: #A6E3A1;
+  --color-theme-priority-medium: #E9D8EE;
+  --color-theme-priority-high: #E8A2AF;
 }
