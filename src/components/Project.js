@@ -1,6 +1,7 @@
 export const Project = (project) => {
   const projectTasksContainer = document.createElement("div")
   projectTasksContainer.id = "tasks-container"
+  projectTasksContainer.className = "flex flex-col gap-4"
 
   const projectHeader = document.createElement("div")
   projectHeader.className = "flex justify-between items-center"
