@@ -39,11 +39,24 @@ export const Task = (task) => {
   const date = document.createElement("span")
   date.textContent = task.dueDate || "-/-/-"
   date.className = "text-sm text-theme-text-1"
-  footer.appendChild(date)
 
-  taskItem.appendChild(header)
-  taskItem.appendChild(description)
-  taskItem.appendChild(footer)
+  const buttonsContainer = document.createElement("div")
+  const editBtn = document.createElement("button")
+  editBtn.innerHTML = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M6 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-1.9l10-10V8l-6-6zm7 1.5L18.5 9H13zm7.1 9.5c-.1 0-.3.1-.4.2l-1 1l2.1 2.1l1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-2 1.8L12 20.9V23h2.1l6.1-6.1z"/></svg>
+  `
+  const trashBtn = document.createElement("button")
+  trashBtn.innerHTML = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zm0 5h2v9H9zm4 0h2v9h-2z"/></svg>
+  `
+  trashBtn.className = "hover:scale-120 hover:rotate-15 duration-200"
+
+  buttonsContainer.className = "flex gap-2 text-theme-text-1"
+  buttonsContainer.append(...[editBtn, trashBtn])
+
+  footer.append(...[date, buttonsContainer])
+
+  taskItem.append(...[header, description, footer])
 
   return taskItem
 }
