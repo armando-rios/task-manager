@@ -18,3 +18,9 @@ export const createTask = ({ projectId, title, description, priority, dueDate })
   localStorage.setItem("tasks", JSON.stringify(tasks))
   renderTasks(projectId)
 }
+
+export const deleteTask = (id) => {
+  const tasks = JSON.parse(localStorage.getItem("tasks")) || []
+  const updatedTasks = tasks.filter(task => task.id !== id)
+  localStorage.setItem("tasks", JSON.stringify(updatedTasks))
+}
