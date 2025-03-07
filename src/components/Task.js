@@ -12,7 +12,8 @@ export const Task = (task) => {
   }[task.priority] || "text-gray-500"
 
   const taskItem = document.createElement("div")
-  taskItem.className = `${priorityClass} py-2 px-4 rounded shadow-md flex flex-col gap-2 border-l-4 hover:bg-theme-surface-2 hover:scale-y-105 duration-200 justify-between`
+  taskItem.id = task.id
+  taskItem.className = `task ${priorityClass} py-2 px-4 rounded shadow-md flex flex-col gap-2 border-l-4 hover:bg-theme-surface-2 hover:scale-y-105 duration-200 justify-between`
 
   const header = document.createElement("div")
   header.className = "flex justify-between items-center"
@@ -49,7 +50,8 @@ export const Task = (task) => {
   trashBtn.innerHTML = `
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zm0 5h2v9H9zm4 0h2v9h-2z"/></svg>
   `
-  trashBtn.className = "hover:scale-120 hover:rotate-15 duration-200"
+  // trashBtn.id = task.id
+  trashBtn.className = "delete-button hover:scale-120 hover:rotate-15 duration-200"
 
   buttonsContainer.className = "flex gap-2 text-theme-text-1"
   buttonsContainer.append(...[editBtn, trashBtn])
