@@ -9,7 +9,7 @@
 
 <body class="catppuccin flex h-full overflow-hidden">
   <div
-    class="hidden flex border-r h-full w-72 md:flex flex-col bg-theme-surface-0 absolute z-50 md:static cursor-pointer"
+    class="hidden flex border-r border-theme-surface-3 h-full w-72 md:flex flex-col bg-theme-surface-0 absolute z-50 md:static cursor-pointer"
     id="sidebar">
     <div class="flex items-center h-16 px-8 justify-between">
       <h1 class="text-2xl font-bold text-theme-primary flex items-center ">
@@ -22,8 +22,8 @@
         </svg>
       </button>
     </div>
-    <div class="flex flex-col border-t flex-1">
-      <nav class="border-b mx-4 px-4 py-4 flex flex-col gap-2">
+    <div class="flex flex-col border-t border-theme-surface-3 flex-1">
+      <nav class="border-b border-theme-surface-3 mx-4 px-4 py-4 flex flex-col gap-2">
         <h3 class="font-bold text-lg">Projects</h3>
         <div class="flex flex-col gap-2" id="projects"></div>
       </nav>
@@ -33,7 +33,7 @@
       </nav>
     </div>
 
-    <div class="py-4 px-8 border-t">
+    <div class="py-4 px-8 border-t border-theme-surface-3">
       <button class="bg-theme-primary w-full text-theme-surface-0 font-bold py-2 px-4 rounded" id="create-project-btn">
         Create Project
       </button>
@@ -46,9 +46,10 @@
           <path fill="currentColor" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" />
         </svg>
       </button>
-      <input placeholder="Search" class="md:w-80 w-full border p-2 rounded-md">
+      <input placeholder="Search" class="md:w-80 w-full bg-theme-surface-2 p-2 rounded-md">
     </div>
-    <div class="px-8 py-4 flex flex-col flex-1 border-t overflow-hidden" id="project-tasks"></div>
+    <div class="px-8 py-4 flex flex-col flex-1 border-t border-theme-surface-3 overflow-hidden" id="project-tasks">
+    </div>
   </div>
 </body>
 
