@@ -24,3 +24,19 @@ export const deleteTask = (id) => {
   const updatedTasks = tasks.filter(task => task.id !== id)
   localStorage.setItem("tasks", JSON.stringify(updatedTasks))
 }
+
+export const editTask = (id, updataData) => {
+  const tasks = JSON.parse(localStorage.getItem("tasks")) || []
+  const updatedTasks = tasks.map(task => {
+    if (task.id === id) {
+      return {
+        ...task,
+        ...updataData,
+        updataAt: new Date().toISOString()
+      }
+    }
+    return task
+  })
+
+  localStorage.setItem("tasks", JSON.stringify(updatedTasks))
+}
