@@ -40,3 +40,21 @@ export const editTask = (id, updataData) => {
 
   localStorage.setItem("tasks", JSON.stringify(updatedTasks))
 }
+
+export const deleteProject = (id) => {
+  // Remove the project from localStorage
+  const projects = JSON.parse(localStorage.getItem("projects")) || []
+  const updatedProjects = projects.filter(project => project.id !== id)
+  localStorage.setItem("projects", JSON.stringify(updatedProjects))
+
+  // Also remove all tasks associated with this project
+  const tasks = JSON.parse(localStorage.getItem("tasks")) || []
+  const updatedTasks = tasks.filter(task => task.projectId !== id)
+  localStorage.setItem("tasks", JSON.stringify(updatedTasks))
+
+  // Re-render the projects list
+  renderProjects(updatedProjects)
+
+  // Clear the project-tasks area
+  document.getElementById("project-tasks").innerHTML = ""
+}
