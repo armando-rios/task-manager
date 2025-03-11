@@ -2,7 +2,7 @@
   "name": "task-manager",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@ar:armando-rios/task-manager",
+  "repository": "git@github.com:armando-rios/task-manager",
   "author": "Armando Rios <armandorios.dev@gmail.com>",
   "license": "MIT",
   "type": "module",
