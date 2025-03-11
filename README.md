@@ -24,11 +24,11 @@ Task Manager allows you to efficiently organize your projects and tasks with a m
   - Solarized
 
 ### In Development
-- Task filtering and sorting
-- Task and project search
-- Task statuses (Pending, In Progress, Completed)
-- Tags/categories for tasks
-- Improvements for mobile responsive design
+- [ ] Task filtering and sorting
+- [ ] Task and project search
+- [ ] Task statuses (Pending, In Progress, Completed)
+- [ ] Tags/categories for tasks 
+- [ ] Improvements for mobile responsive design
 
 ## Technologies Used
 
@@ -111,3 +111,7 @@ task-manager/
 ├── webpack.prod.js      # Production configuration
 └── package.json         # Dependencies and scripts
 ```
+
+## License
+
+This project is licensed under the MIT License.
