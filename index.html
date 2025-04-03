@@ -29,7 +29,19 @@
       </nav>
       <nav class="mx-4 px-4 py-4 flex flex-col gap-2">
         <h3 class="font-bold text-lg">Filters</h3>
-        <div class="flex flex-col gap-2" id="filters"></div>
+        <div class="flex flex-col gap-2" id="filters">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="low-priority-checkbox" class="w-4 h-4">
+            <label for="low-priority-checkbox" class="text-sm">Low Priority</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="medium-priority-checkbox" class="w-4 h-4">
+            <label for="medium-priority-checkbox" class="text-sm">Medium Priority</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="high-priority-checkbox" class="w-4 h-4">
+            <label for="high-priority-checkbox" class="text-sm">High Priority</label>
+          </div>
       </nav>
     </div>
 
