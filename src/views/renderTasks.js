@@ -1,4 +1,5 @@
 import { Task } from "../components/Task.js"
+import { initDragDropController } from "../controllers/dragDropController.js";
 import { initTasksController } from "../controllers/tasksController.js"
 
 const activeFilters = {
@@ -54,4 +55,6 @@ export const renderFilteredTasks = (projectId, filterType = 'all') => {
   filteredTasks.forEach((task) => {
     tasksList.append(Task(task));
   });
+
+  initDragDropController()
 }
