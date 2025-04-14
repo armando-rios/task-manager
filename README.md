@@ -75,24 +75,6 @@ yarn build
 
 The compiled files will be generated in the `dist` directory.
 
-## Usage Guide
-
-### Project Management
-1. Click on "Create Project" in the sidebar
-2. Enter the project name and an optional description
-3. Click on "Create"
-
-### Task Management
-1. Select a project from the sidebar
-2. Click on "Create Task"
-3. Fill in the task details (title, description, priority, due date)
-4. Click on "Create"
-
-### Theme Customization
-- Click on the theme dropdown in the header
-- Select your preferred theme
-- The theme will be saved for your next visit
-
 ## Project Structure
 
 ```
