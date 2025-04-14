@@ -24,7 +24,7 @@ Task Manager allows you to efficiently organize your projects and tasks with a m
   - Solarized
 
 ### In Development
-- [ ] Task filtering and sorting
+- [x] Task filtering and sorting
 - [ ] Task and project search
 - [ ] Task statuses (Pending, In Progress, Completed)
 - [ ] Tags/categories for tasks 
