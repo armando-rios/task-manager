@@ -1,4 +1,4 @@
-import Task from '../models/Task.js'
+import Task from '../models/Task'
 
 export const createTask = async (req, res) => {
   try {
@@ -20,6 +20,24 @@ export const createTask = async (req, res) => {
     res.status(500).json({
       status: 'ERROR',
       message: 'Error creating task',
+      error: error.message,
+    })
+  }
+}
+
+export const getTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find()
+
+    res.status(200).json({
+      status: 'OK',
+      message: 'Tasks retrieved successfully',
+      tasks,
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'ERROR',
+      message: 'Error retrieving tasks',
       error: error.message,
     })
   }
