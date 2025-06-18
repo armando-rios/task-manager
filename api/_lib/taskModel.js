@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, models } from 'mongoose'
 
 const taskSchema = new Schema({
   title: { type: String, required: true },
@@ -11,6 +11,7 @@ const taskSchema = new Schema({
   dueDate: { type: Date, required: true },
 })
 
-const task = model('Task', taskSchema)
+// Use existing model if available (prevents OverwriteModelError in serverless)
+const Task = models.Task || model('Task', taskSchema)
 
-export default task
+export default Task
