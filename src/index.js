@@ -6,8 +6,8 @@ import { initProjectListController } from './controllers/projectListController.j
 import { initThemeSwitcher } from './controllers/themeSwitcher.js'
 import { initFilterController } from './controllers/filterController.js'
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderProjects()
+document.addEventListener('DOMContentLoaded', async () => {
+  await renderProjects()
   initSidebarController()
   initProjectModalController()
   initProjectListController()
