@@ -7,10 +7,11 @@ import { initThemeSwitcher } from './controllers/themeSwitcher.js'
 import { initFilterController } from './controllers/filterController.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await renderProjects()
   initSidebarController()
   initProjectModalController()
   initProjectListController()
   initThemeSwitcher()
   initFilterController()
+
+  await renderProjects()
 })
