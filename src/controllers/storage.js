@@ -1,60 +1,94 @@
-import { renderProjects } from "../views/renderProjects.js"
-import { renderTasks } from "../views/renderTasks.js"
-import Project from "../models/Project.js"
-import Task from "../models/Task.js"
+import { renderProjects } from '../views/renderProjects.js'
+import { renderTasks } from '../views/renderTasks.js'
+import { projectService } from '../services/projectService.js'
+import { taskService } from '../services/taskService.js'
 
-export const createProject = (name, description) => {
-  const projects = JSON.parse(localStorage.getItem("projects")) || []
-  const project = new Project(name, description)
-  projects.push(project)
-  localStorage.setItem("projects", JSON.stringify(projects))
-  renderProjects(projects)
+/**
+ * Create a new project via API
+ */
+export const createProject = async (name, description) => {
+  try {
+    await projectService.create({ name, description })
+
+    // Reload all projects after creation
+    const projects = await projectService.getAll()
+    renderProjects(projects)
+  } catch (error) {
+    console.error('Error creating project:', error)
+    alert('Error creating project. Please try again.')
+  }
 }
 
-export const createTask = ({ projectId, title, description, priority, dueDate }) => {
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || []
-  const task = new Task({ title, description, projectId, priority, dueDate })
-  tasks.push(task)
-  localStorage.setItem("tasks", JSON.stringify(tasks))
-  renderTasks(projectId)
+/**
+ * Create a new task via API
+ */
+export const createTask = async ({
+  projectId,
+  title,
+  description,
+  priority,
+  dueDate,
+}) => {
+  try {
+    await taskService.create({
+      projectId,
+      title,
+      description,
+      priority: priority.toLowerCase(), // API expects lowercase
+      dueDate,
+    })
+
+    // Re-render tasks for this project
+    await renderTasks(projectId)
+  } catch (error) {
+    console.error('Error creating task:', error)
+    alert('Error creating task. Please try again.')
+  }
 }
 
+/**
+ * Delete a task (localStorage fallback - hasta crear el endpoint)
+ */
 export const deleteTask = (id) => {
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || []
-  const updatedTasks = tasks.filter(task => task.id !== id)
-  localStorage.setItem("tasks", JSON.stringify(updatedTasks))
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || []
+  const updatedTasks = tasks.filter((task) => task.id !== id)
+  localStorage.setItem('tasks', JSON.stringify(updatedTasks))
 }
 
+/**
+ * Edit a task (localStorage fallback - hasta crear el endpoint)
+ */
 export const editTask = (id, updataData) => {
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || []
-  const updatedTasks = tasks.map(task => {
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || []
+  const updatedTasks = tasks.map((task) => {
     if (task.id === id) {
       return {
         ...task,
         ...updataData,
-        updataAt: new Date().toISOString()
+        updataAt: new Date().toISOString(),
       }
     }
     return task
   })
 
-  localStorage.setItem("tasks", JSON.stringify(updatedTasks))
+  localStorage.setItem('tasks', JSON.stringify(updatedTasks))
 }
 
-export const deleteProject = (id) => {
-  // Remove the project from localStorage
-  const projects = JSON.parse(localStorage.getItem("projects")) || []
-  const updatedProjects = projects.filter(project => project.id !== id)
-  localStorage.setItem("projects", JSON.stringify(updatedProjects))
+/**
+ * Delete a project via API
+ */
+export const deleteProject = async (id) => {
+  try {
+    await projectService.delete(id)
 
-  // Also remove all tasks associated with this project
-  const tasks = JSON.parse(localStorage.getItem("tasks")) || []
-  const updatedTasks = tasks.filter(task => task.projectId !== id)
-  localStorage.setItem("tasks", JSON.stringify(updatedTasks))
+    // Reload all projects
+    const projects = await projectService.getAll()
+    renderProjects(projects)
 
-  // Re-render the projects list
-  renderProjects(updatedProjects)
-
-  // Clear the project-tasks area
-  document.getElementById("project-tasks").innerHTML = ""
+    // Clear the project-tasks area
+    document.getElementById('project-tasks').innerHTML = ''
+  } catch (error) {
+    console.error('Error deleting project:', error)
+    alert('Error deleting project. Please try again.')
+  }
 }
