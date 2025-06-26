@@ -32,9 +32,10 @@ export async function POST(request) {
     await connectDB()
 
     const body = await request.json()
-    const { title, description, priority, dueDate } = body
+    const { projectId, title, description, priority, dueDate } = body
 
     const newTask = await Task.create({
+      projectId,
       title,
       description,
       priority,
