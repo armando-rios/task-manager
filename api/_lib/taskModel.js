@@ -1,17 +1,40 @@
 import mongoose from 'mongoose'
 
-const taskSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  priority: {
-    type: String,
-    enum: ['Low', 'Medium', 'High'],
-    default: 'Low',
+const taskSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    priority: {
+      type: String,
+      enum: ['low', 'medium', 'high'],
+      default: 'medium',
+    },
+    dueDate: {
+      type: Date,
+      required: true,
+    },
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
+    },
   },
-  dueDate: { type: Date, required: true },
-})
+  {
+    timestamps: true,
+  }
+)
 
-// Use existing model if available (prevents OverwriteModelError in serverless)
+// Índice para búsquedas rápidas por proyecto
+taskSchema.index({ projectId: 1 })
+
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema)
 
 export default Task
