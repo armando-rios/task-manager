@@ -15,17 +15,6 @@ export default {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "swc-loader"
-        }
-      },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader", "postcss-loader"]
-      },
-      {
         test: /\.(png|svg|jpg|jpeg|git)$/i,
         type: "asset/resource"
       }
