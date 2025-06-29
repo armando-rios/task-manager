@@ -2,118 +2,101 @@ import { connectDB } from './_lib/db.js'
 import Task from './_lib/taskModel.js'
 import Project from './_lib/projectModel.js'
 
-export async function GET() {
-  try {
-    await connectDB()
+export default async function handler(req, res) {
+  // Manejar preflight request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
 
-    const projects = await Project.find().sort({ createdAt: -1 })
+  if (req.method === 'GET') {
+    try {
+      await connectDB()
+      const projects = await Project.find().sort({ createdAt: -1 })
 
-    return Response.json({
-      status: 'OK',
-      message: 'Projects retrieved successfully',
-      projects,
-    })
-  } catch (error) {
-    console.error('GET Error:', error)
-    return Response.json(
-      {
+      return res.status(200).json({
+        status: 'OK',
+        message: 'Projects retrieved successfully',
+        projects,
+      })
+    } catch (error) {
+      console.error('GET Error:', error)
+      return res.status(500).json({
         status: 'ERROR',
         message: 'Error retrieving projects',
         error: error.message,
-      },
-      { status: 500 }
-    )
+      })
+    }
   }
-}
 
-export async function POST(request) {
-  try {
-    await connectDB()
+  if (req.method === 'POST') {
+    try {
+      await connectDB()
+      const { name, description } = req.body
 
-    const body = await request.json()
-    const { name, description } = body
-
-    if (!name || name.trim() === '') {
-      return Response.json(
-        {
+      if (!name || name.trim() === '') {
+        return res.status(400).json({
           status: 'ERROR',
           message: 'Project name is required',
-        },
-        { status: 400 }
-      )
-    }
+        })
+      }
 
-    const newProject = await Project.create({
-      name,
-      description: description || '',
-    })
+      const newProject = await Project.create({
+        name,
+        description: description || '',
+      })
 
-    return Response.json(
-      {
+      return res.status(201).json({
         status: 'OK',
         message: 'Project created successfully',
         project: newProject,
-      },
-      { status: 201 }
-    )
-  } catch (error) {
-    console.error('POST Error:', error)
-    return Response.json(
-      {
+      })
+    } catch (error) {
+      console.error('POST Error:', error)
+      return res.status(500).json({
         status: 'ERROR',
         message: 'Error creating project',
         error: error.message,
-      },
-      { status: 500 }
-    )
+      })
+    }
   }
-}
 
-export async function DELETE(request) {
-  try {
-    await connectDB()
+  if (req.method === 'DELETE') {
+    try {
+      await connectDB()
+      const { id } = req.body
 
-    const body = await request.json()
-    const { id } = body
-
-    if (!id) {
-      return Response.json(
-        {
+      if (!id) {
+        return res.status(400).json({
           status: 'ERROR',
           message: 'Project ID is required',
-        },
-        { status: 400 }
-      )
-    }
+        })
+      }
 
-    const deletedProject = await Project.findByIdAndDelete(id)
+      const deletedProject = await Project.findByIdAndDelete(id)
 
-    if (!deletedProject) {
-      return Response.json(
-        {
+      if (!deletedProject) {
+        return res.status(404).json({
           status: 'ERROR',
           message: 'Project not found',
-        },
-        { status: 404 }
-      )
-    }
+        })
+      }
 
-    await Task.deleteMany({ projectId: id })
+      await Task.deleteMany({ projectId: id })
 
-    return Response.json({
-      status: 'OK',
-      message: 'Project deleted successfully',
-      project: deletedProject,
-    })
-  } catch (error) {
-    console.error('DELETE Error:', error)
-    return Response.json(
-      {
+      return res.status(200).json({
+        status: 'OK',
+        message: 'Project deleted successfully',
+        project: deletedProject,
+      })
+    } catch (error) {
+      console.error('DELETE Error:', error)
+      return res.status(500).json({
         status: 'ERROR',
         message: 'Error deleting project',
         error: error.message,
-      },
-      { status: 500 }
-    )
+      })
+    }
   }
+
+  return res.status(405).json({ error: 'Method not allowed' })
 }
