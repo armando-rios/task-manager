@@ -1,7 +1,12 @@
+import { handleCors } from '../_lib/corsMiddleware.js'
+
 /**
  * Logout endpoint - clears the auth cookie
  */
 export default async function handler(req, res) {
+  // CORS para desarrollo - REMOVER cuando frontend y backend estén en mismo dominio
+  handleCors(req, res)
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
   }
