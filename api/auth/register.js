@@ -1,5 +1,5 @@
-import { connectDB } from '../_lib/db'
-import User from '../_lib/userModel'
+import { connectDB } from '../_lib/db.js'
+import User from '../_lib/userModel.js'
 import { generateVerificationToken } from '../_lib/authMiddleware.js'
 import { sendVerificationEmail } from '../_lib/emailService.js'
 
@@ -76,4 +76,9 @@ export default async function handler(req, res) {
       })
     }
   }
+
+  return res.status(405).json({
+    status: 'ERROR',
+    message: 'Method not allowed',
+  })
 }
