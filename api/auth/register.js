@@ -2,8 +2,12 @@ import { connectDB } from '../_lib/db.js'
 import User from '../_lib/userModel.js'
 import { generateVerificationToken } from '../_lib/authMiddleware.js'
 import { sendVerificationEmail } from '../_lib/emailService.js'
+import { handleCors } from '../_lib/corsMiddleware.js'
 
 export default async function handler(req, res) {
+  // CORS para desarrollo - REMOVER cuando frontend y backend estén en mismo dominio
+  handleCors(req, res)
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
   }
