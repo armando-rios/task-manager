@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  'https://task-manager-t8vcp8ii9-armando-rios-projects.vercel.app/api'
+const API_BASE_URL = '/api'
 
 export const ENDPOINTS = {
   // Auth endpoints
