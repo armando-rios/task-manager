@@ -20,23 +20,23 @@ const userSchema = new mongoose.Schema(
         },
         message: (props) => `${props.value} is not a valid email address!`,
       },
-      password: {
-        type: String,
-        required: true,
-        minlength: 6,
-      },
-      emailVerified: {
-        type: Boolean,
-        default: false,
-      },
-      verificationToken: {
-        type: String,
-        default: null,
-      },
-      verificationTokenExpiry: {
-        type: Date,
-        default: null,
-      },
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      default: null,
+    },
+    verificationTokenExpiry: {
+      type: Date,
+      default: null,
     },
   },
   {
