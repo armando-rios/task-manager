@@ -7,6 +7,8 @@ export const ENDPOINTS = {
     REGISTER: `${API_BASE_URL}/auth/register`,
     LOGOUT: `${API_BASE_URL}/auth/logout`,
     ME: `${API_BASE_URL}/auth/me`,
+    VERIFY_EMAIL: `${API_BASE_URL}/auth/verify-email`,
+    RESEND_VERIFICATION: `${API_BASE_URL}/auth/resend-verification`,
   },
   // Resource endpoints
   PROJECTS: `${API_BASE_URL}/projects`,
