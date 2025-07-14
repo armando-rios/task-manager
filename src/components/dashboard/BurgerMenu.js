@@ -18,4 +18,6 @@ export const BurgerMenu = () => {
       sidebar.classList.toggle('hidden')
     }
   })
+
+  return burgerMenu
 }

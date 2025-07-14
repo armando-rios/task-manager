@@ -9,7 +9,8 @@ import { getCurrentUser } from '../services/authService.js'
  */
 export default async function dashboard() {
   // Get current user
-  const user = getCurrentUser()
+  const user = await getCurrentUser()
+  console.log(user)
 
   const container = cD({
     tagName: 'div',
