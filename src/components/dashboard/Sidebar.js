@@ -7,7 +7,7 @@ export function Sidebar() {
   const sidebarContainer = cD({
     tagName: 'div',
     styles:
-      'w-76 bg-theme-surface-0 px-4 border-r border-theme-surface-3 flex flex-col max-sm:fixed top-16 bottom-0 max-sm:z-10 max-sm:-translate-x-full gap-4',
+      'w-76 bg-theme-surface-0 px-4 border-r border-theme-surface-3 flex flex-col max-sm:fixed top-16 bottom-0 max-sm:z-10 max-sm:-translate-x-full gap-4 transition-transform',
   })
 
   // Create Project Button
