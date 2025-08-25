@@ -1,6 +1,6 @@
 import cD from '../../utils/createDocument.js'
-import { handleLogout } from '../../controllers/authController.js'
 import { BurgerMenu } from './BurgerMenu.js'
+import { Logout } from '../common/LogoutButton.js'
 
 export const Header = (user) => {
   const header = cD({
@@ -26,14 +26,7 @@ export const Header = (user) => {
     textContent: user ? `Welcome, ${user.name}` : 'Welcome',
   })
 
-  const logoutButton = cD({
-    tagName: 'button',
-    styles:
-      'px-4 py-1 bg-theme-surface-2 text-sm text-theme-text-0 rounded-md hover:bg-theme-surface-3 transition-colors',
-    textContent: 'Logout',
-  })
-
-  logoutButton.addEventListener('click', handleLogout)
+  const logoutButton = Logout()
 
   const burgerMenu = BurgerMenu()
 

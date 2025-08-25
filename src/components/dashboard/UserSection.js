@@ -1,4 +1,5 @@
 import cD from '../../utils/createDocument.js'
+import { Logout } from '../common/LogoutButton.js'
 
 export function UserSection() {
   const userSection = cD({
@@ -27,21 +28,16 @@ export function UserSection() {
     styles: 'text-theme-text-0 font-medium',
   })
 
-  const logoutButton = cD({
-    tagName: 'button',
-    styles:
-      'px-3 py-1.5 bg-theme-surface-2 hover:bg-theme-surface-3 text-theme-text-0 rounded-lg transition-colors text-sm font-medium',
-    textContent: 'Cerrar sesión',
-  })
+  const logout = Logout()
 
   userDetails.append(userAvatar, userName)
-  userInfo.append(userDetails, logoutButton)
+  userInfo.append(userDetails, logout)
   userSection.append(userInfo)
 
   return {
     element: userSection,
     userAvatar,
     userName,
-    logoutButton,
+    logout,
   }
 }
