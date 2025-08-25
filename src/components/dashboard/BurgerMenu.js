@@ -15,7 +15,7 @@ export const BurgerMenu = () => {
   burgerMenu.addEventListener('click', () => {
     const sidebar = document.querySelector('main > div')
     if (sidebar) {
-      sidebar.classList.toggle('hidden')
+      sidebar.classList.toggle('max-sm:-translate-x-full')
     }
   })
 

@@ -14,7 +14,7 @@ export default async function dashboard() {
 
   const container = cD({
     tagName: 'div',
-    styles: 'min-h-screen bg-theme-surface-1 flex flex-col ',
+    styles: 'h-screen bg-theme-surface-1 flex flex-col',
   })
 
   // Main content
@@ -25,7 +25,7 @@ export default async function dashboard() {
 
   const mainSection = cD({
     tagName: 'div',
-    styles: 'bg-theme-surface-0 p-8 w-full max-sm:hidden',
+    styles: 'bg-theme-surface-0 p-8 flex-1 h-full',
   })
 
   const welcomeTitle = cD({
