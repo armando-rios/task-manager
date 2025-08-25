@@ -21,7 +21,8 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       await connectDB()
-      const projects = await Project.find().sort({ createdAt: -1 })
+      // get user's projects
+      const projects = await Project.find({ userId: verification.userId })
 
       return res.status(200).json({
         status: 'OK',
@@ -41,6 +42,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       await connectDB()
+
       const { name, description } = req.body
 
       if (!name || name.trim() === '') {
@@ -53,6 +55,7 @@ export default async function handler(req, res) {
       const newProject = await Project.create({
         name,
         description: description || '',
+        userId: verification.userId,
       })
 
       return res.status(201).json({
@@ -73,6 +76,7 @@ export default async function handler(req, res) {
   if (req.method === 'DELETE') {
     try {
       await connectDB()
+
       const { id } = req.body
 
       if (!id) {
@@ -82,7 +86,10 @@ export default async function handler(req, res) {
         })
       }
 
-      const deletedProject = await Project.findByIdAndDelete(id)
+      const deletedProject = await Project.findOneAndDelete({
+        _id: id,
+        userId: verification.userId,
+      })
 
       if (!deletedProject) {
         return res.status(404).json({

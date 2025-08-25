@@ -12,11 +12,18 @@ const projectSchema = new mongoose.Schema(
       default: '',
       trim: true,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 )
+
+projectSchema.index({ userId: 1 })
 
 const Project =
   mongoose.models.Project || mongoose.model('Project', projectSchema)
