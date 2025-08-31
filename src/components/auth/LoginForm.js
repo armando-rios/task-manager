@@ -42,9 +42,11 @@ export function LoginForm(onSubmit) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
 
+    // ✅ Usar FormData para extraer valores por name
+    const formData = new FormData(form)
     const credentials = {
-      email: emailInput.input.value,
-      password: passwordInput.input.value,
+      email: formData.get('email'),
+      password: formData.get('password'),
     }
 
     if (onSubmit) {
@@ -52,7 +54,7 @@ export function LoginForm(onSubmit) {
     }
   })
 
-  form.append(emailInput.container, passwordInput.container, submitButton)
+  form.append(emailInput, passwordInput, submitButton)
 
   return form
 }

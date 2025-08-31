@@ -1,46 +1,67 @@
 import cD from '../../utils/createDocument.js'
 
 /**
- * Creates a reusable input component with label
- * @param {Object} params - Input parameters
- * @param {string} params.label - Label text
- * @param {string} [params.type='text'] - Input type
- * @param {string} [params.placeholder=''] - Placeholder text
- * @param {boolean} [params.required=false] - Whether the input is required
- * @param {string} [params.name=''] - Input name attribute
- * @returns {Object} Object containing container element and input element
+ * Create a single input field with label
+ * @param {Object} props - The properties for the input component
+ * @param {string} props.label - The label text for the input
+ * @param {string} [props.type='text'] - The type of the input (e.g., 'text', 'email', 'password', 'textarea')
+ * @param {string} props.name - The name and id for the input element
+ * @param {string} [props.placeholder=''] - The placeholder text for the input
+ * @param {boolean} [props.required=false] - Whether the input is required
+ * @param {string} [props.value=''] - The default value for the input
+ * @returns {HTMLElement} The input group element containing the label and input
  */
-export function Input({
+export const Input = ({
   label,
   type = 'text',
+  name,
   placeholder = '',
   required = false,
-  name = '',
-}) {
-  const container = cD({
+  value = '',
+}) => {
+  const inputGroup = cD({
     tagName: 'div',
-    styles: 'flex flex-col gap-2',
+    styles: 'flex flex-col gap-1',
   })
 
   const labelElement = cD({
     tagName: 'label',
+    styles: 'text-theme-text-1 text-sm font-medium',
     textContent: label,
-    styles: 'text-sm font-medium',
   })
+  labelElement.htmlFor = name
 
-  const inputStyles =
-    'w-full px-4 py-2 bg-theme-surface-2 border border-theme-surface-3 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-primary'
+  let inputElement
 
-  const input = cD({
-    tagName: 'input',
-    styles: inputStyles,
-    placeholder,
-    type,
-    required,
-    name,
-  })
+  if (type === 'textarea') {
+    inputElement = cD({
+      tagName: 'textarea',
+      id: name,
+      name: name,
+      styles:
+        'px-3 py-2 bg-theme-surface-1 text-theme-text-0 rounded-md border border-theme-surface-3 focus:outline-none focus:ring-2 focus:ring-theme-primary resize-none',
+      placeholder: placeholder,
+    })
+    inputElement.rows = 3
+    inputElement.value = value
+  } else {
+    inputElement = cD({
+      tagName: 'input',
+      type: type,
+      id: name,
+      name: name,
+      styles:
+        'px-3 py-2 bg-theme-surface-1 text-theme-text-0 rounded-md border border-theme-surface-3 focus:outline-none focus:ring-2 focus:ring-theme-primary',
+      placeholder: placeholder,
+    })
+    inputElement.value = value
+  }
 
-  container.append(labelElement, input)
+  if (required) {
+    inputElement.required = true
+  }
 
-  return { container, input }
+  inputGroup.append(labelElement, inputElement)
+
+  return inputGroup
 }

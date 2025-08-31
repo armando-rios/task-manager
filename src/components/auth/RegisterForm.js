@@ -51,10 +51,12 @@ export function RegisterForm(onSubmit) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
 
+    // ✅ Usar FormData
+    const formData = new FormData(form)
     const userData = {
-      name: nameInput.input.value,
-      email: emailInput.input.value,
-      password: passwordInput.input.value,
+      name: formData.get('name'),
+      email: formData.get('email'),
+      password: formData.get('password'),
     }
 
     if (onSubmit) {
@@ -62,12 +64,7 @@ export function RegisterForm(onSubmit) {
     }
   })
 
-  form.append(
-    nameInput.container,
-    emailInput.container,
-    passwordInput.container,
-    submitButton
-  )
+  form.append(nameInput, emailInput, passwordInput, submitButton)
 
   return form
 }
