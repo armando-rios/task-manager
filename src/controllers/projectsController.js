@@ -1,5 +1,6 @@
 import { projectService } from '../services/projectService.js'
 import cD from '../utils/createDocument.js'
+import { tasksController } from './tasksController.js'
 
 /**
  * Controller for managing projects
@@ -12,10 +13,7 @@ export const projectsController = {
    */
   async renderList() {
     const container = document.querySelector('#projects-list')
-    if (!container) {
-      console.error('Projects container not found')
-      return
-    }
+    if (!container) return
 
     container.innerHTML = ''
 
@@ -27,6 +25,13 @@ export const projectsController = {
         return
       }
 
+      // ✅If no active project, select the first one by default
+      if (!this.activeProjectId && projects.length > 0) {
+        this.activeProjectId = projects[0]._id
+        tasksController.renderTasks(projects[0])
+      }
+
+      // Renderizar todos los proyectos (el activo se marcará visualmente)
       projects.forEach((project) => {
         const projectElement = this._createProjectElement(project)
         container.appendChild(projectElement)
@@ -57,7 +62,7 @@ w-full
     projectElement.dataset.projectId = project._id
 
     projectElement.addEventListener('click', () => {
-      this.selectProject(project._id)
+      this.selectProject(project)
     })
 
     return projectElement
@@ -67,19 +72,18 @@ w-full
    * Select a project
    * @param {string} projectId - ID of the project to select
    */
-  async selectProject(projectId) {
-    this.activeProjectId = projectId
+  async selectProject(project) {
+    this.activeProjectId = project._id
 
     // Re-render the projects list
     await this.renderList()
 
-    // Here we emit an event to notify other parts of the app about the selected project
-    // Example: to load tasks for the selected project
+    tasksController.renderTasks(project)
 
     // Emit event with projectId detail
     document.dispatchEvent(
       new CustomEvent('projectSelected', {
-        detail: { projectId },
+        detail: { projectId: project._id },
       })
     )
   },
@@ -88,6 +92,7 @@ w-full
    * Create a new project
    */
   async createProject(projectData) {
+    // TODO: change re-render to just append the new project
     try {
       const newProject = await projectService.create(projectData)
 
@@ -95,7 +100,7 @@ w-full
       await this.renderList()
 
       // Select the newly created project
-      await this.selectProject(newProject._id)
+      await this.selectProject(newProject)
 
       return newProject
     } catch (error) {
