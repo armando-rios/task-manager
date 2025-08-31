@@ -14,6 +14,7 @@ export function ProjectsList() {
 
   const projectsContainer = cD({
     tagName: 'div',
+    id: 'projects-list',
     styles: 'flex flex-col gap-1 overflow-y-auto flex-1 h-full',
   })
 
@@ -21,6 +22,6 @@ export function ProjectsList() {
 
   return {
     element: projectsSection,
-    projectsContainer,
+    container: projectsContainer,
   }
 }

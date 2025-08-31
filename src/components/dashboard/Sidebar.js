@@ -2,6 +2,7 @@ import cD from '../../utils/createDocument.js'
 import { UserSection } from './UserSection.js'
 import { ProjectsList } from './ProjectsList.js'
 import { PriorityFilters } from './PriorityFilters.js'
+import { projectsController } from '../../controllers/projectsController.js'
 
 export function Sidebar() {
   const sidebarContainer = cD({
@@ -16,6 +17,13 @@ export function Sidebar() {
     styles:
       'w-full bg-theme-primary hover:bg-opacity-90 text-theme-surface-0 font-semibold py-2 rounded-lg transition-all mt-4 flex items-center justify-center gap-2',
     textContent: '+ Crear Proyecto',
+  })
+
+  createProjectButton.addEventListener('click', () => {
+    const name = prompt('Nombre del proyecto:')
+    if (name) {
+      projectsController.createProject({ name, description: '' })
+    }
   })
 
   // Create sub-components
