@@ -3,6 +3,7 @@ import { UserSection } from './UserSection.js'
 import { ProjectsList } from './ProjectsList.js'
 import { PriorityFilters } from './PriorityFilters.js'
 import { projectsController } from '../../controllers/projectsController.js'
+import { Modal } from '../../components/common/Modal.js'
 
 export function Sidebar() {
   const sidebarContainer = cD({
@@ -20,10 +21,36 @@ export function Sidebar() {
   })
 
   createProjectButton.addEventListener('click', () => {
-    const name = prompt('Nombre del proyecto:')
-    if (name) {
-      projectsController.createProject({ name, description: '' })
-    }
+    Modal({
+      title: 'Create Project',
+      submitText: 'Create',
+      cancelText: 'Cancel',
+      inputs: [
+        {
+          label: 'Project Name',
+          type: 'text',
+          name: 'name',
+          placeholder: 'Enter project name',
+          required: true,
+        },
+        {
+          label: 'Description',
+          type: 'textarea',
+          name: 'description',
+          placeholder: 'Enter project description (optional)',
+          required: false,
+        },
+      ],
+      onSubmit: async (data) => {
+        try {
+          await projectsController.createProject(data)
+          // Success feedback (puedes agregar un toast/notification)
+        } catch (error) {
+          console.error('Error creating project:', error)
+          alert('Error creating project')
+        }
+      },
+    })
   })
 
   // Create sub-components
