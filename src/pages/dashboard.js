@@ -22,16 +22,17 @@ export default async function dashboard() {
     styles: 'flex-1 flex h-full',
   })
 
-  const mainSection = cD({
+  const tasksSection = cD({
     tagName: 'div',
     styles: 'bg-theme-surface-0 p-8 flex-1 h-full',
+    id: 'tasks-section',
   })
 
   const header = Header(user)
 
   const sidebar = Sidebar()
 
-  main.append(sidebar, mainSection)
+  main.append(sidebar, tasksSection)
   container.append(header, main)
 
   // ═══════════════════════════════════════════════════
