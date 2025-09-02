@@ -24,7 +24,7 @@ export default async function dashboard() {
 
   const tasksSection = cD({
     tagName: 'div',
-    styles: 'bg-theme-surface-0 p-8 flex-1 h-full',
+    styles: 'bg-theme-surface-0 flex-1 h-full',
     id: 'tasks-section',
   })
 
