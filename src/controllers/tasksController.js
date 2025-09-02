@@ -12,7 +12,7 @@ export const tasksController = {
 
     const tasksContainer = cD({
       tagName: 'div',
-      styles: 'bg-theme-surface-1 p-8 flex-1 h-full flex flex-col',
+      styles: 'p-6 flex-1 h-full flex flex-col',
       id: 'tasks-list',
     })
 
