@@ -20,7 +20,7 @@ export const tasksController = {
     const heading = cD({
       tagName: 'div',
       styles:
-        'flex justify-between items-center p-6 border-b border-theme-surface-1',
+        'flex justify-between items-center p-6 border-b border-theme-surface-3',
     })
 
     const projectName = cD({
