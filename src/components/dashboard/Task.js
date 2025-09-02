@@ -16,7 +16,7 @@ export const Task = (task) => {
   const taskItem = document.createElement('div')
   taskItem.id = task._id
   taskItem.draggable = true
-  taskItem.className = `task ${priorityClass} py-2 px-4 rounded shadow-md flex flex-col gap-2 border-l-4 hover:bg-theme-surface-2 hover:scale-y-105 duration-200 justify-between`
+  taskItem.className = `task ${priorityClass} py-2 px-4 rounded shadow-md flex flex-col gap-2 border-l-4 hover:bg-theme-surface-2 duration-200 justify-between`
 
   const header = document.createElement('div')
   header.className = 'flex justify-between items-center'
