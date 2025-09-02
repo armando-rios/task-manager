@@ -1,6 +1,7 @@
 import cD from '../utils/createDocument.js'
 import { taskService } from '../services/taskService.js'
 import { Modal } from '../components/common/Modal.js'
+import { Task } from '../components/dashboard/Task.js'
 
 export const tasksController = {
   activeProjectId: null,
@@ -19,20 +20,19 @@ export const tasksController = {
     const heading = cD({
       tagName: 'div',
       styles:
-        'flex justify-between items-center p-6 border-b border-theme-border-1',
-      textContent: project.name,
+        'flex justify-between items-center p-6 border-b border-theme-surface-1',
     })
 
     const projectName = cD({
       tagName: 'h2',
-      styles: 'text-theme-text-1 text-lg font-semibold mb-2',
-      textContent: `Tareas del proyecto: ${project.name}`,
+      styles: 'text-theme-text-0 text-xl font-semibold',
+      textContent: project.name,
     })
 
     const addTaskButton = cD({
       tagName: 'button',
       styles:
-        'ml-4 px-3 py-1 bg-theme-primary text-white rounded hover:bg-theme-primary',
+        'px-3 py-2 bg-theme-primary text-theme-surface-0 rounded hover:bg-theme-primary',
       textContent: 'Agregar Tarea',
     })
 
@@ -118,11 +118,7 @@ export const tasksController = {
       }
 
       projectTasks.forEach((task) => {
-        const taskElement = cD({
-          tagName: 'div',
-          styles: 'p-4 mb-2 bg-theme-surface-2 rounded-lg',
-          textContent: task.title,
-        })
+        const taskElement = Task(task)
         container.appendChild(taskElement)
       })
     } catch (error) {
