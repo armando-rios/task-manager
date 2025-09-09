@@ -45,11 +45,11 @@ export async function handleRegister({ name, email, password }) {
     const data = await register(name, email, password)
     console.log('Registration successful:', data)
 
-    // Show success message and stay on auth page
-    // User needs to verify email before logging in
-    alert(
-      'Registration successful! Please check your email to verify your account.',
-    )
+    // Store email for waiting verification page
+    sessionStorage.setItem('pending_verification_email', email)
+
+    // Redirect to waiting verification page
+    window.router.navigate('/waiting-verification')
   } catch (error) {
     console.error('Registration failed:', error)
     alert(`Registration failed: ${error.message}`)
