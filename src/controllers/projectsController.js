@@ -1,6 +1,7 @@
 import { projectService } from '../services/projectService.js'
 import cD from '../utils/createDocument.js'
 import { tasksController } from './tasksController.js'
+import { ProjectSkeleton } from '../components/dashboard/ProjectSkeleton.js'
 
 /**
  * Controller for managing projects
@@ -15,10 +16,15 @@ export const projectsController = {
     const container = document.querySelector('#projects-list')
     if (!container) return
 
+    // Show skeleton loaders while loading
     container.innerHTML = ''
+    this._renderSkeletons(container, 3)
 
     try {
       const projects = await projectService.getAll()
+
+      // Clear skeletons before rendering actual content
+      container.innerHTML = ''
 
       if (projects.length === 0) {
         this._renderEmptyState(container)
@@ -38,6 +44,7 @@ export const projectsController = {
       })
     } catch (error) {
       console.error('Error loading projects:', error)
+      container.innerHTML = ''
       this._renderErrorState(container)
     }
   },
@@ -155,5 +162,17 @@ w-full
       textContent: 'Error al cargar proyectos',
     })
     container.appendChild(errorState)
+  },
+
+  /**
+   * Render skeleton loaders
+   * @param {HTMLElement} container
+   * @param {number} count - Number of skeletons to render
+   */
+  _renderSkeletons(container, count = 3) {
+    for (let i = 0; i < count; i++) {
+      const skeleton = ProjectSkeleton()
+      container.appendChild(skeleton)
+    }
   },
 }
