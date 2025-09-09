@@ -1,4 +1,9 @@
-import { login, register, logout, resendVerificationEmail } from '../services/authService.js'
+import {
+  login,
+  register,
+  logout,
+  resendVerificationEmail,
+} from '../services/authService.js'
 
 /**
  * Handles login logic
@@ -16,13 +21,13 @@ export async function handleLogin({ email, password }) {
     window.router.navigate('/')
   } catch (error) {
     console.error('Login failed:', error)
-    
+
     // Check if error is due to unverified email
     if (error.message && error.message.includes('Email not verified')) {
       const resend = confirm(
         'Your email is not verified. Would you like to resend the verification email?'
       )
-      
+
       if (resend) {
         await handleResendVerification(email)
       }

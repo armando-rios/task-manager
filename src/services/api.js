@@ -20,7 +20,9 @@ export async function apiRequest(url, options = {}) {
       // If JSON parsing fails, try to get text for better error message
       const text = await response.text()
       console.error('Failed to parse JSON response:', text.substring(0, 200))
-      throw new Error(`Server returned invalid JSON response (${response.status})`)
+      throw new Error(
+        `Server returned invalid JSON response (${response.status})`
+      )
     }
 
     if (!response.ok) {

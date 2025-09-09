@@ -121,7 +121,7 @@ export async function verifyEmail(token) {
     `${ENDPOINTS.AUTH.VERIFY_EMAIL}?token=${token}`,
     {
       method: 'GET',
-    },
+    }
   )
 
   return data
