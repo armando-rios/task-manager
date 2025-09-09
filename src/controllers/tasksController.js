@@ -2,6 +2,7 @@ import cD from '../utils/createDocument.js'
 import { taskService } from '../services/taskService.js'
 import { Modal } from '../components/common/Modal.js'
 import { Task } from '../components/dashboard/Task.js'
+import { TaskSkeleton } from '../components/dashboard/TaskSkeleton.js'
 
 export const tasksController = {
   activeProjectId: null,
@@ -98,7 +99,9 @@ export const tasksController = {
     const container = document.querySelector('#tasks-list')
     if (!container) return
 
+    // Show skeleton loaders while loading
     container.innerHTML = ''
+    this._renderSkeletons(container, 5)
 
     try {
       const tasks = await taskService.getAll()
@@ -106,6 +109,9 @@ export const tasksController = {
       const projectTasks = tasks.filter(
         (task) => task.projectId === this.activeProjectId
       )
+
+      // Clear skeletons before rendering actual content
+      container.innerHTML = ''
 
       if (projectTasks.length === 0) {
         const emptyState = cD({
@@ -123,7 +129,20 @@ export const tasksController = {
       })
     } catch (error) {
       console.error('Error loading tasks:', error)
+      container.innerHTML = ''
       this._renderErrorState(container)
+    }
+  },
+
+  /**
+   * Render skeleton loaders
+   * @param {HTMLElement} container
+   * @param {number} count - Number of skeletons to render
+   */
+  _renderSkeletons(container, count = 5) {
+    for (let i = 0; i < count; i++) {
+      const skeleton = TaskSkeleton()
+      container.appendChild(skeleton)
     }
   },
 
