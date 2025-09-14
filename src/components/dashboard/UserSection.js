@@ -4,7 +4,7 @@ import { Logout } from '../common/LogoutButton.js'
 export function UserSection() {
   const userSection = cD({
     tagName: 'div',
-    styles: 'sm:hidden pb-4 flex-shrink-0',
+    styles: 'sm:hidden py-4 flex-shrink-0',
   })
 
   const userInfo = cD({
