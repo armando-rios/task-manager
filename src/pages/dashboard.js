@@ -13,18 +13,18 @@ export default async function dashboard() {
 
   const container = cD({
     tagName: 'div',
-    styles: 'h-screen bg-theme-surface-1 flex flex-col',
+    styles: 'h-screen bg-theme-surface-1 flex flex-col overflow-hidden',
   })
 
   // Main content
   const main = cD({
     tagName: 'main',
-    styles: 'flex-1 flex h-full',
+    styles: 'flex-1 flex min-h-0 overflow-hidden',
   })
 
   const tasksSection = cD({
     tagName: 'div',
-    styles: 'flex-1 h-full bg-theme-surface-1',
+    styles: 'flex-1 bg-theme-surface-1 overflow-auto',
     id: 'tasks-section',
   })
 
