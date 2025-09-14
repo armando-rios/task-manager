@@ -4,7 +4,7 @@ export function PriorityFilters() {
   const filtersSection = cD({
     tagName: 'div',
     styles:
-      'border-theme-surface-3 border-y sm:border-b-0 border-theme-surface-3 py-4',
+      'border-theme-surface-3 border-y sm:border-b-0 border-theme-surface-3 py-4 flex-shrink-0',
   })
 
   const filtersHeader = cD({

@@ -9,14 +9,14 @@ export function Sidebar() {
   const sidebarContainer = cD({
     tagName: 'div',
     styles:
-      'w-76 bg-theme-surface-0 px-4 border-r border-theme-surface-3 flex flex-col max-sm:fixed top-16 bottom-0 max-sm:z-10 max-sm:-translate-x-full gap-4 transition-transform',
+      'w-76 bg-theme-surface-0 px-4 border-r border-theme-surface-3 flex flex-col max-sm:fixed top-16 bottom-0 max-sm:z-10 max-sm:-translate-x-full transition-transform overflow-hidden',
   })
 
   // Create Project Button
   const createProjectButton = cD({
     tagName: 'button',
     styles:
-      'w-full bg-theme-primary hover:bg-opacity-90 text-theme-surface-0 font-semibold py-2 rounded-lg transition-all mt-4 flex items-center justify-center gap-2',
+      'w-full bg-theme-primary hover:bg-opacity-90 text-theme-surface-0 font-semibold py-2 rounded-lg transition-all mt-4 mb-4 flex items-center justify-center gap-2 flex-shrink-0',
     textContent: '+ Crear Proyecto',
   })
 

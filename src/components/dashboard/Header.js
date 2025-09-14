@@ -6,7 +6,7 @@ export const Header = (user) => {
   const header = cD({
     tagName: 'header',
     styles:
-      'bg-theme-surface-0 border-b border-theme-surface-3 px-8 h-16 flex justify-between items-center',
+      'bg-theme-surface-0 border-b border-theme-surface-3 px-8 h-16 flex-shrink-0 flex justify-between items-center',
   })
 
   const title = cD({
