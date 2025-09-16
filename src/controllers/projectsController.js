@@ -90,12 +90,7 @@ w-full
       )
       if (prevElement) {
         // Remove active classes
-        prevElement.classList.remove(
-          'bg-theme-surface-2',
-          'border-l-4',
-          'border-theme-accent'
-        )
-        prevElement.classList.add('bg-theme-surface-1')
+        prevElement.classList.remove('bg-theme-surface-2', 'text-theme-primary')
       }
     }
 
@@ -104,12 +99,7 @@ w-full
       `[data-project-id="${project._id}"]`
     )
     if (currentElement) {
-      currentElement.classList.remove('bg-theme-surface-1')
-      currentElement.classList.add(
-        'bg-theme-surface-2',
-        'border-l-4',
-        'border-theme-accent'
-      )
+      currentElement.classList.add('bg-theme-surface-2', 'text-theme-primary')
     }
 
     tasksController.renderTasks(project)
