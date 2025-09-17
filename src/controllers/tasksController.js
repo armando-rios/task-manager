@@ -6,6 +6,8 @@ import { TaskSkeleton } from '../components/dashboard/TaskSkeleton.js'
 
 export const tasksController = {
   activeProjectId: null,
+  taskCache: {},
+
   renderTasks(project) {
     this.activeProjectId = project._id
     const container = document.querySelector('#tasks-section')
@@ -104,11 +106,19 @@ export const tasksController = {
     this._renderSkeletons(container, 5)
 
     try {
-      const tasks = await taskService.getAll()
+      let projectTasks
 
-      const projectTasks = tasks.filter(
-        (task) => task.projectId === this.activeProjectId
-      )
+      if (this.taskCache[this.activeProjectId]) {
+        console.log('Loading tasks from cache')
+        projectTasks = this.taskCache[this.activeProjectId]
+      } else {
+        console.log('Fetching tasks from service')
+        const tasks = await taskService.getAll()
+        projectTasks = tasks.filter(
+          (task) => task.projectId === this.activeProjectId
+        )
+        this.taskCache[this.activeProjectId] = projectTasks
+      }
 
       // Clear skeletons before rendering actual content
       container.innerHTML = ''
@@ -132,6 +142,10 @@ export const tasksController = {
       container.innerHTML = ''
       this._renderErrorState(container)
     }
+  },
+
+  invalidateCache(projectId) {
+    delete this.taskCache[projectId]
   },
 
   /**

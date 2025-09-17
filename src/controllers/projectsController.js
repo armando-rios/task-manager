@@ -80,14 +80,30 @@ w-full
    * @param {string} projectId - ID of the project to select
    */
   async selectProject(project) {
+    const previousProjectId = this.activeProjectId
     this.activeProjectId = project._id
 
-    // Re-render the projects list
-    await this.renderList()
+    // Remove active state from previous project
+    if (previousProjectId) {
+      const prevElement = document.querySelector(
+        `[data-project-id="${previousProjectId}"]`
+      )
+      if (prevElement) {
+        // Remove active classes
+        prevElement.classList.remove('bg-theme-surface-2', 'text-theme-primary')
+      }
+    }
+
+    // Add active state to new project
+    const currentElement = document.querySelector(
+      `[data-project-id="${project._id}"]`
+    )
+    if (currentElement) {
+      currentElement.classList.add('bg-theme-surface-2', 'text-theme-primary')
+    }
 
     tasksController.renderTasks(project)
 
-    // Emit event with projectId detail
     document.dispatchEvent(
       new CustomEvent('projectSelected', {
         detail: { projectId: project._id },
