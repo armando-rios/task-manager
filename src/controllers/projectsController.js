@@ -1,13 +1,16 @@
 import { projectService } from '../services/projectService.js'
-import cD from '../utils/createDocument.js'
 import { tasksController } from './tasksController.js'
 import { ProjectSkeleton } from '../components/dashboard/ProjectSkeleton.js'
+import { createProjectListItem } from '../components/dashboard/ProjectListItem.js'
+import { ErrorState } from '../components/dashboard/ErrorState.js'
+import { EmptyState } from '../components/dashboard/ErrorState.js'
 
 /**
  * Controller for managing projects
  */
 export const projectsController = {
   activeProjectId: null,
+  projects: [],
 
   /**
    * Render the list of projects
@@ -16,14 +19,12 @@ export const projectsController = {
     const container = document.querySelector('#projects-list')
     if (!container) return
 
-    // Show skeleton loaders while loading
     container.innerHTML = ''
     this._renderSkeletons(container, 3)
 
     try {
       const projects = await projectService.getAll()
-
-      // Clear skeletons before rendering actual content
+      this.projects = projects
       container.innerHTML = ''
 
       if (projects.length === 0) {
@@ -31,20 +32,18 @@ export const projectsController = {
         return
       }
 
-      // ✅If no active project, select the first one by default
-      if (!this.activeProjectId && projects.length > 0) {
-        this.activeProjectId = projects[0]._id
-        tasksController.renderTasks(projects[0])
-      }
-
-      // Renderizar todos los proyectos (el activo se marcará visualmente)
+      // Renderizamos usando el nuevo método centralizado
       projects.forEach((project) => {
         const projectElement = this._createProjectElement(project)
         container.appendChild(projectElement)
       })
+
+      // AUTO-SELECCIÓN: Si no hay activo, seleccionamos el primero formalmente
+      if (!this.activeProjectId && projects.length > 0) {
+        this.selectProject(projects[0])
+      }
     } catch (error) {
       console.error('Error loading projects:', error)
-      container.innerHTML = ''
       this._renderErrorState(container)
     }
   },
@@ -54,75 +53,42 @@ export const projectsController = {
    * @param {Object} project - Project data
    * @returns {HTMLElement} Project DOM element
    */
-  _createProjectElement(project) {
-    const isActive = this.activeProjectId === project._id
-
-    const projectElement = cD({
-      tagName: 'button',
-      styles: `px-3 py-2 rounded-lg flex justify-between items-center cursor-pointer transition-colors text-start
-w-full ${isActive ? 'bg-theme-surface-2 text-theme-primary' : 'text-theme-text-2 hover:bg-theme-surface-2'}`,
-      textContent: project.name,
-    })
-
-    const deleteButton = cD({
-      tagName: 'button',
-      styles:
-        'hover:scale-110 text-transparent hover:text-red-500 duration-200 p-1 rounded-md',
-      innerHTML: `
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zm0
-5h2v9H9zm4 0h2v9h-2z"/></svg>
-    `,
-    })
-
-    deleteButton.addEventListener('click', async (event) => {
-      event.stopPropagation() // Prevent triggering project selection
-      const confirmDelete = confirm(
-        `¿Estás seguro de que deseas eliminar el proyecto "${project.name}"? Esta acción no se puede deshacer.`
-      )
-      if (confirmDelete) {
-        await this.deleteProject(project._id)
-      }
-    })
-
-    projectElement.appendChild(deleteButton)
-
-    // Add data attribute
-    projectElement.dataset.projectId = project._id
-
-    projectElement.addEventListener('click', () => {
-      this.selectProject(project)
-    })
-
-    return projectElement
-  },
 
   /**
    * Select a project
    * @param {string} projectId - ID of the project to select
    */
-  async selectProject(project) {
+  selectProject(project) {
+    if (!project || !project._id) return
+    if (this.activeProjectId === project._id) return
+
     const previousProjectId = this.activeProjectId
     this.activeProjectId = project._id
 
-    // Remove active state from previous project
+    const activeStyles = ['bg-theme-surface-2', 'text-theme-primary']
+    const inactiveStyles = ['text-theme-text-2', 'hover:bg-theme-surface-2']
+
+    // 2. Limpiar el anterior (si existe)
     if (previousProjectId) {
       const prevElement = document.querySelector(
         `[data-project-id="${previousProjectId}"]`
       )
       if (prevElement) {
-        // Remove active classes
-        prevElement.classList.remove('bg-theme-surface-2', 'text-theme-primary')
+        prevElement.classList.remove(...activeStyles)
+        prevElement.classList.add(...inactiveStyles) // Devolvemos el estilo gris y el hover
       }
     }
 
-    // Add active state to new project
+    // 3. Activar el nuevo
     const currentElement = document.querySelector(
       `[data-project-id="${project._id}"]`
     )
     if (currentElement) {
-      currentElement.classList.add('bg-theme-surface-2', 'text-theme-primary')
+      currentElement.classList.add(...activeStyles)
+      currentElement.classList.remove(...inactiveStyles) // Quitamos el hover porque ya está activo
     }
 
+    // 4. Lógica de negocio
     tasksController.renderTasks(project)
 
     document.dispatchEvent(
@@ -135,17 +101,30 @@ w-full ${isActive ? 'bg-theme-surface-2 text-theme-primary' : 'text-theme-text-2
   /**
    * Create a new project
    */
+  _createProjectElement(project) {
+    return createProjectListItem(
+      project,
+      this.activeProjectId,
+      (id) => this.deleteProject(id),
+      (p) => this.selectProject(p)
+    )
+  },
+
   async createProject(projectData) {
-    // TODO: change re-render to just append the new project
     try {
       const newProject = await projectService.create(projectData)
+      this.projects.push(newProject)
 
-      // Re-render the projects list
-      await this.renderList()
+      const container = document.querySelector('#projects-list')
 
-      // Select the newly created project
-      await this.selectProject(newProject)
+      // Si era el primero, limpiamos el "Empty State"
+      if (this.projects.length === 1) container.innerHTML = ''
 
+      // Usamos el método centralizado aquí también
+      const projectElement = this._createProjectElement(newProject)
+      container.appendChild(projectElement)
+
+      this.selectProject(newProject)
       return newProject
     } catch (error) {
       console.error('Error creating project:', error)
@@ -161,17 +140,38 @@ w-full ${isActive ? 'bg-theme-surface-2 text-theme-primary' : 'text-theme-text-2
     try {
       await projectService.delete(projectId)
 
-      // if the deleted project was active, clear selection
+      const elementToRemove = document.querySelector(
+        `[data-project-id="${projectId}"]`
+      )
+      if (elementToRemove) elementToRemove.remove()
+
+      // Actualizar la lista local quitando el borrado
+      this.projects = this.projects.filter((p) => p._id !== projectId)
+
       if (this.activeProjectId === projectId) {
         this.activeProjectId = null
-        // Emitir evento para limpiar tareas
         document.dispatchEvent(new CustomEvent('projectDeselected'))
+
+        const firstProjectElement = document.querySelector('[data-project-id]')
+
+        if (firstProjectElement) {
+          const nextId = firstProjectElement.dataset.projectId
+          // Buscamos el objeto completo para que selectProject no falle
+          const nextProject = this.projects.find((p) => p._id === nextId)
+
+          if (nextProject) {
+            this.selectProject(nextProject)
+          }
+        }
       }
 
-      await this.renderList()
+      // 3. Verificar si la lista quedó vacía para mostrar el Empty State
+      const container = document.querySelector('#projects-list')
+      if (container && container.children.length === 0) {
+        this._renderEmptyState(container)
+      }
     } catch (error) {
       console.error('Error deleting project:', error)
-      throw error
     }
   },
 
@@ -180,12 +180,7 @@ w-full ${isActive ? 'bg-theme-surface-2 text-theme-primary' : 'text-theme-text-2
    * @param {HTMLElement} container
    */
   _renderEmptyState(container) {
-    const emptyState = cD({
-      tagName: 'p',
-      styles: 'px-3 py-4 text-center text-theme-text-1 text-sm',
-      textContent: 'No hay proyectos aún. ¡Crea tu primer proyecto!',
-    })
-    container.appendChild(emptyState)
+    EmptyState(container)
   },
 
   /**
@@ -193,12 +188,7 @@ w-full ${isActive ? 'bg-theme-surface-2 text-theme-primary' : 'text-theme-text-2
    * @param {HTMLElement} container
    */
   _renderErrorState(container) {
-    const errorState = cD({
-      tagName: 'p',
-      styles: 'px-3 py-4 text-center text-red-500 text-sm',
-      textContent: 'Error al cargar proyectos',
-    })
-    container.appendChild(errorState)
+    ErrorState(container)
   },
 
   /**
