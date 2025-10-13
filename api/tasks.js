@@ -3,12 +3,10 @@ import Task from './_lib/taskModel.js'
 import { verifyTokenFromCookie } from './_lib/authMiddleware.js'
 
 export default async function handler(req, res) {
-  // Manejar preflight request
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
   }
 
-  // Verificar autenticación para todos los métodos
   const verification = verifyTokenFromCookie(req)
   if (!verification.valid) {
     return res.status(401).json({
@@ -20,11 +18,16 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       await connectDB()
-      const tasks = await Task.find()
+
+      const { projectId } = req.query
+      const filter = projectId ? { projectId } : {}
+      const tasks = await Task.find(filter)
 
       return res.status(200).json({
         status: 'OK',
-        message: 'Tasks retrieved successfully',
+        message: projectId
+          ? `Tasks for project ${projectId} retrieved`
+          : 'All tasks retrieved',
         tasks,
       })
     } catch (error) {
