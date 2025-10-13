@@ -1,171 +1,167 @@
-import cD from '../utils/createDocument.js'
 import { taskService } from '../services/taskService.js'
+import { TaskLayout } from '../components/dashboard/TaskLayout.js'
 import { Modal } from '../components/common/Modal.js'
 import { Task } from '../components/dashboard/Task.js'
-import { TaskSkeleton } from '../components/dashboard/TaskSkeleton.js'
 
 export const tasksController = {
   activeProjectId: null,
-  taskCache: {},
 
-  renderTasks(project) {
+  async renderTasks(project) {
     this.activeProjectId = project._id
+    const tasks = await taskService.getByProject(project._id)
+
     const container = document.querySelector('#tasks-section')
-    if (!container) return
-
-    const tasksContainer = cD({
-      tagName: 'div',
-      styles: 'p-6 flex-1 h-full flex flex-col gap-4',
-      id: 'tasks-list',
-    })
-
     container.innerHTML = ''
-    const heading = cD({
-      tagName: 'div',
-      styles:
-        'flex justify-between items-center p-6 border-b border-theme-surface-3',
-    })
 
-    const projectName = cD({
-      tagName: 'h2',
-      styles: 'text-theme-text-0 text-xl font-semibold',
-      textContent: project.name,
-    })
+    // Le pasamos la función que abre el modal
+    const { header, listContainer } = TaskLayout(
+      project,
+      tasks,
+      () => this._openCreateTaskModal(),
+      (task) => this._handleDeleteTask(task),
+      (task) => this._handleEditTask(task)
+    )
 
-    const addTaskButton = cD({
-      tagName: 'button',
-      styles:
-        'px-3 py-2 bg-theme-primary text-theme-surface-0 rounded hover:bg-theme-primary',
-      textContent: 'Agregar Tarea',
-    })
+    container.append(header, listContainer)
+  },
 
-    addTaskButton.addEventListener('click', () => {
-      Modal({
-        title: 'Add New Task',
-        submitText: 'Create Task',
-        cancelText: 'Cancel',
-        inputs: [
-          {
-            label: 'Task Title',
-            type: 'text',
-            name: 'title',
-            required: true,
-          },
-          {
-            label: 'Description',
-            type: 'textarea',
-            name: 'description',
-          },
-          {
-            label: 'Priority',
-            type: 'select',
-            name: 'priority',
-            options: [
-              { value: 'low', text: 'Low' },
-              { value: 'medium', text: 'Medium' },
-              { value: 'high', text: 'High' },
-            ],
-          },
-          {
-            label: 'Due Date',
-            type: 'date',
-            name: 'dueDate',
-          },
-        ],
-        async onSubmit(data) {
-          try {
-            await taskService.create({
-              title: data.title,
-              description: data.description,
-              projectId: project._id,
-              priority: data.priority,
-              dueDate: data.dueDate,
-            })
-            tasksController.renderList()
-          } catch (error) {
-            console.error('Error creating task:', error)
-            alert('Failed to create task. Please try again.')
-          }
+  _openCreateTaskModal() {
+    Modal({
+      title: 'Add New Task',
+      submitText: 'Create Task',
+      cancelText: 'Cancel',
+      inputs: [
+        { label: 'Task Title', type: 'text', name: 'title', required: true },
+        { label: 'Description', type: 'textarea', name: 'description' },
+        {
+          label: 'Priority',
+          type: 'select',
+          name: 'priority',
+          options: [
+            { value: 'low', text: 'Low' },
+            { value: 'medium', text: 'Medium' },
+            { value: 'high', text: 'High' },
+          ],
         },
-      })
+        { label: 'Due Date', type: 'date', name: 'dueDate' },
+      ],
+      onSubmit: (data) => this._handleCreateTask(data),
     })
-
-    heading.append(projectName, addTaskButton)
-
-    container.append(heading, tasksContainer)
-
-    this.renderList()
   },
 
-  async renderList() {
-    const container = document.querySelector('#tasks-list')
-    if (!container) return
-
-    // Show skeleton loaders while loading
-    container.innerHTML = ''
-    this._renderSkeletons(container, 5)
-
+  async _handleCreateTask(data) {
     try {
-      let projectTasks
-
-      if (this.taskCache[this.activeProjectId]) {
-        console.log('Loading tasks from cache')
-        projectTasks = this.taskCache[this.activeProjectId]
-      } else {
-        console.log('Fetching tasks from service')
-        const tasks = await taskService.getAll()
-        projectTasks = tasks.filter(
-          (task) => task.projectId === this.activeProjectId
-        )
-        this.taskCache[this.activeProjectId] = projectTasks
-      }
-
-      // Clear skeletons before rendering actual content
-      container.innerHTML = ''
-
-      if (projectTasks.length === 0) {
-        const emptyState = cD({
-          tagName: 'p',
-          styles: 'text-theme-text-2',
-          textContent: 'No tasks found for this project.',
-        })
-        container.appendChild(emptyState)
-        return
-      }
-
-      projectTasks.forEach((task) => {
-        const taskElement = Task(task)
-        container.appendChild(taskElement)
+      const newTask = await taskService.create({
+        ...data,
+        projectId: this.activeProjectId,
       })
+
+      const listContainer = document.querySelector('#tasks-list')
+      if (listContainer) {
+        const taskElement = Task(
+          newTask,
+          () => this._handleDeleteTask(newTask),
+          () => this._handleEditTask(newTask)
+        )
+        taskElement.classList.add('fade-in-up')
+        listContainer.appendChild(taskElement)
+      }
     } catch (error) {
-      console.error('Error loading tasks:', error)
-      container.innerHTML = ''
-      this._renderErrorState(container)
+      console.error('Error creating task:', error)
     }
   },
+  async _handleDeleteTask(task) {
+    Modal({
+      title: '¿Eliminar tarea?',
+      message: `¿Estás seguro de que quieres eliminar "${task.title}"?`,
+      submitText: 'Eliminar',
+      cancelText: 'Cancelar',
+      async onSubmit() {
+        try {
+          await taskService.delete(task._id)
 
-  invalidateCache(projectId) {
-    delete this.taskCache[projectId]
-  },
+          const taskElement = document.getElementById(task._id)
 
-  /**
-   * Render skeleton loaders
-   * @param {HTMLElement} container
-   * @param {number} count - Number of skeletons to render
-   */
-  _renderSkeletons(container, count = 5) {
-    for (let i = 0; i < count; i++) {
-      const skeleton = TaskSkeleton()
-      container.appendChild(skeleton)
-    }
-  },
+          if (taskElement) {
+            taskElement.classList.add('fade-out')
 
-  _renderErrorState(container) {
-    const errorState = cD({
-      tagName: 'p',
-      styles: 'text-theme-error',
-      textContent: 'An error occurred while loading tasks.',
+            await new Promise((resolve) => setTimeout(resolve, 300))
+            taskElement.remove()
+          }
+
+          const listContainer = document.querySelector('#tasks-list')
+          if (listContainer && listContainer.children.length === 0) {
+            listContainer.innerHTML =
+              '<p class="text-theme-text-2">No hay tareas pendientes.</p>'
+          }
+        } catch (error) {
+          console.error('Error al borrar tarea:', error)
+          alert('No se pudo eliminar la tarea.')
+        }
+      },
     })
-    container.appendChild(errorState)
+  },
+  async _handleEditTask(task) {
+    Modal({
+      title: 'Editar Tarea',
+      submitText: 'Guardar Cambios',
+      cancelText: 'Cancelar',
+      inputs: [
+        {
+          label: 'Task Title',
+          type: 'text',
+          name: 'title',
+          value: task.title,
+          required: true,
+        },
+        {
+          label: 'Description',
+          type: 'textarea',
+          name: 'description',
+          value: task.description || '',
+        },
+        {
+          label: 'Priority',
+          type: 'select',
+          name: 'priority',
+          value: task.priority,
+          options: [
+            { value: 'low', text: 'Low' },
+            { value: 'medium', text: 'Medium' },
+            { value: 'high', text: 'High' },
+          ],
+        },
+        {
+          label: 'Due Date',
+          type: 'date',
+          name: 'dueDate',
+          value: task.dueDate ? task.dueDate.split('T')[0] : '',
+        },
+      ],
+      onSubmit: async (formData) => {
+        try {
+          const updatedTask = await taskService.update(task._id, {
+            ...formData,
+            projectId: this.activeProjectId,
+          })
+
+          const oldElement = document.getElementById(task._id)
+          if (oldElement) {
+            const newElement = Task(
+              updatedTask,
+              () => this._handleDeleteTask(updatedTask),
+              () => this._handleEditTask(updatedTask)
+            )
+
+            oldElement.replaceWith(newElement)
+
+            newElement.classList.add('highlight-flash')
+          }
+        } catch (error) {
+          console.error('Error updating task:', error)
+          alert('No se pudo actualizar la tarea.')
+        }
+      },
+    })
   },
 }
