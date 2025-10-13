@@ -10,6 +10,16 @@ export const taskService = {
     return response.tasks
   },
 
+  async getByProject(projectId) {
+    if (!projectId) throw new Error('projectId is required')
+
+    const response = await fetch(`/api/tasks?projectId=${projectId}`)
+    const data = await response.json()
+
+    if (data.status === 'ERROR') throw new Error(data.message)
+    return data.tasks
+  },
+
   /**
    * Create a new task
    */
