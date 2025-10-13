@@ -1,4 +1,4 @@
-export const Task = (task) => {
+export const Task = (task, onDelete, onEdit) => {
   const priorityClass =
     {
       low: 'bg-theme-priority-low/15 border-theme-priority-low',
@@ -53,6 +53,10 @@ export const Task = (task) => {
   `
   editBtn.className = 'edit-button hover:scale-120 hover:rotate-15 duration-200'
 
+  editBtn.addEventListener('click', () => {
+    onEdit(task)
+  })
+
   const trashBtn = document.createElement('button')
   trashBtn.innerHTML = `
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zm0
@@ -60,6 +64,11 @@ export const Task = (task) => {
   `
   trashBtn.className =
     'delete-button hover:scale-120 hover:rotate-15 duration-200'
+
+  trashBtn.addEventListener('click', async (e) => {
+    e.stopPropagation()
+    onDelete(task)
+  })
 
   buttonsContainer.className = 'flex gap-2 text-theme-text-1'
   buttonsContainer.append(...[editBtn, trashBtn])
