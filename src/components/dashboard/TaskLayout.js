@@ -37,14 +37,19 @@ export function TaskLayout(
     id: 'tasks-list',
   })
 
-  tasks.forEach((task) => {
-    const taskElement = Task(
-      task,
-      () => onDeleteTask(task),
-      () => onEditTask(task)
-    )
-    listContainer.appendChild(taskElement)
-  })
+  if (tasks && tasks.length > 0) {
+    tasks.forEach((task) => {
+      const taskElement = Task(
+        task,
+        () => onDeleteTask(task),
+        () => onEditTask(task)
+      )
+      listContainer.appendChild(taskElement)
+    })
+  } else {
+    listContainer.innerHTML =
+      '<p class="text-theme-text-2">No hay tareas pendientes.</p>'
+  }
 
   return { header, listContainer }
 }
