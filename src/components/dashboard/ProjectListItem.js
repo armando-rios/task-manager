@@ -1,4 +1,5 @@
 import cD from '../../utils/createDocument.js'
+import { Modal } from '../common/Modal.js'
 
 /**
  * Creates a project list item component.
@@ -35,12 +36,16 @@ w-full ${isActive ? 'bg-theme-surface-2 text-theme-primary' : 'text-theme-text-2
 
   deleteButton.addEventListener('click', async (event) => {
     event.stopPropagation() // Prevent triggering project selection
-    const confirmDelete = confirm(
-      `¿Estás seguro de que deseas eliminar el proyecto "${project.name}"? Esta acción no se puede deshacer.`
-    )
-    if (confirmDelete) {
-      await onDelete(project._id)
-    }
+
+    Modal({
+      title: '¿Eliminar Proyecto?',
+      message: `¿Estás seguro de que quieres eliminar?`,
+      submitText: 'Eliminar',
+      cancelText: 'Cancelar',
+      onSubmit: async () => {
+        await onDelete(project._id)
+      },
+    })
   })
 
   projectElement.appendChild(deleteButton)
