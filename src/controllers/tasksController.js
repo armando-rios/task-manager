@@ -1,5 +1,6 @@
 import { taskService } from '../services/taskService.js'
 import { TaskLayout } from '../components/dashboard/TaskLayout.js'
+import { TaskSkeleton } from '../components/dashboard/TaskSkeleton.js'
 import { Modal } from '../components/common/Modal.js'
 import { Task } from '../components/dashboard/Task.js'
 
@@ -9,31 +10,55 @@ export const tasksController = {
 
   async renderTasks(project) {
     this.activeProjectId = project._id
-
     const container = document.querySelector('#tasks-section')
     if (!container) return
 
-    let tasks
+    // 1. Si NO hay caché, prepararemos el terreno para los skeletons
+    let tasks = this.taskCache[project._id]
 
-    if (this.taskCache[project._id]) {
-      tasks = this.taskCache[project._id]
-    } else {
-      tasks = await taskService.getByProject(project._id)
-      this.taskCache[project._id] = tasks
-    }
-
+    // 2. Render inicial del Layout (pasamos un array vacío temporal si no hay caché)
     container.innerHTML = ''
-
-    // Le pasamos la función que abre el modal
     const { header, listContainer } = TaskLayout(
       project,
-      tasks,
+      tasks || [], // Si es null, pasamos vacío para que TaskLayout no explote
       () => this._openCreateTaskModal(),
-      (task) => this._handleDeleteTask(task),
-      (task) => this._handleEditTask(task)
+      (t) => this._handleDeleteTask(t),
+      (t) => this._handleEditTask(t)
     )
-
     container.append(header, listContainer)
+
+    // 3. Lógica de carga
+    if (!tasks) {
+      // MOSTRAR SKELETONS
+      listContainer.innerHTML = '' // Limpiamos el mensaje de "No hay tareas" temporalmente
+      this._renderSkeletons(listContainer, 4)
+
+      try {
+        tasks = await taskService.getByProject(project._id)
+        this.taskCache[project._id] = tasks
+
+        // 4. Reemplazar skeletons con la realidad
+        listContainer.innerHTML = ''
+        if (tasks.length === 0) {
+          listContainer.innerHTML =
+            '<p class="text-theme-text-2">No hay tareas pendientes.</p>'
+        } else {
+          tasks.forEach((task) => {
+            const el = this._createTaskElement(task)
+            listContainer.appendChild(el)
+          })
+        }
+      } catch {
+        listContainer.innerHTML =
+          '<p class="text-theme-error">Error al cargar tareas.</p>'
+      }
+    }
+  },
+
+  _renderSkeletons(container, count) {
+    for (let i = 0; i < count; i++) {
+      container.appendChild(TaskSkeleton())
+    }
   },
 
   _openCreateTaskModal() {
