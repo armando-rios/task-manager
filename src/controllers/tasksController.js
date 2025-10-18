@@ -5,12 +5,23 @@ import { Task } from '../components/dashboard/Task.js'
 
 export const tasksController = {
   activeProjectId: null,
+  taskCache: {},
 
   async renderTasks(project) {
     this.activeProjectId = project._id
-    const tasks = await taskService.getByProject(project._id)
 
     const container = document.querySelector('#tasks-section')
+    if (!container) return
+
+    let tasks
+
+    if (this.taskCache[project._id]) {
+      tasks = this.taskCache[project._id]
+    } else {
+      tasks = await taskService.getByProject(project._id)
+      this.taskCache[project._id] = tasks
+    }
+
     container.innerHTML = ''
 
     // Le pasamos la función que abre el modal
@@ -49,6 +60,14 @@ export const tasksController = {
     })
   },
 
+  _createTaskElement(task) {
+    return Task(
+      task,
+      () => this._handleDeleteTask(task),
+      () => this._handleEditTask(task)
+    )
+  },
+
   async _handleCreateTask(data) {
     try {
       const newTask = await taskService.create({
@@ -56,13 +75,16 @@ export const tasksController = {
         projectId: this.activeProjectId,
       })
 
+      if (this.taskCache[this.activeProjectId]) {
+        this.taskCache[this.activeProjectId].push(newTask)
+      }
+
       const listContainer = document.querySelector('#tasks-list')
       if (listContainer) {
-        const taskElement = Task(
-          newTask,
-          () => this._handleDeleteTask(newTask),
-          () => this._handleEditTask(newTask)
-        )
+        if (this.taskCache[this.activeProjectId].length === 1) {
+          listContainer.innerHTML = ''
+        }
+        const taskElement = this._createTaskElement(newTask)
         taskElement.classList.add('fade-in-up')
         listContainer.appendChild(taskElement)
       }
@@ -70,15 +92,20 @@ export const tasksController = {
       console.error('Error creating task:', error)
     }
   },
+
   async _handleDeleteTask(task) {
     Modal({
       title: '¿Eliminar tarea?',
       message: `¿Estás seguro de que quieres eliminar "${task.title}"?`,
       submitText: 'Eliminar',
       cancelText: 'Cancelar',
-      async onSubmit() {
+      onSubmit: async () => {
         try {
           await taskService.delete(task._id)
+
+          this.taskCache[this.activeProjectId] = this.taskCache[
+            this.activeProjectId
+          ].filter((t) => t._id !== task._id)
 
           const taskElement = document.getElementById(task._id)
 
@@ -144,6 +171,10 @@ export const tasksController = {
             ...formData,
             projectId: this.activeProjectId,
           })
+
+          this.taskCache[this.activeProjectId] = this.taskCache[
+            this.activeProjectId
+          ].map((t) => (t._id === task._id ? updatedTask : t))
 
           const oldElement = document.getElementById(task._id)
           if (oldElement) {
