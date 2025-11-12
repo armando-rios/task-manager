@@ -1,17 +1,11 @@
 import './style.css'
-import { renderProjects } from './views/renderProjects.js'
-import { initSidebarController } from './controllers/sidebarController.js'
-import { initProjectModalController } from './controllers/projectModalController.js'
-import { initProjectListController } from './controllers/projectListController.js'
-import { initThemeSwitcher } from './controllers/themeSwitcher.js'
-import { initFilterController } from './controllers/filterController.js'
+import { Router } from './router/Router.js'
+import { routes } from './router/routes.js'
 
 document.addEventListener('DOMContentLoaded', async () => {
-  initSidebarController()
-  initProjectModalController()
-  initProjectListController()
-  initThemeSwitcher()
-  initFilterController()
+  // Initialize router as a global variable
+  window.router = new Router(routes)
 
-  await renderProjects()
+  // Navigate to current path
+  await window.router.navigate(window.location.pathname, false)
 })

@@ -18,8 +18,28 @@ export const taskService = {
       method: 'POST',
       body: JSON.stringify(taskData),
     })
-    return response.newTask
+    return response.task
   },
 
-  // TODO: Agregar update y delete cuando estén disponibles en el backend
+  /**
+   * Update a task
+   */
+  async update(id, taskData) {
+    const response = await apiRequest(ENDPOINTS.TASKS, {
+      method: 'PUT',
+      body: JSON.stringify({ id, ...taskData }),
+    })
+    return response.task
+  },
+
+  /**
+   * Delete a task
+   */
+  async delete(id) {
+    const response = await apiRequest(ENDPOINTS.TASKS, {
+      method: 'DELETE',
+      body: JSON.stringify({ id }),
+    })
+    return response.task
+  },
 }

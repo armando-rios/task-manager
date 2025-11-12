@@ -1,11 +1,21 @@
 import { connectDB } from './_lib/db.js'
 import Task from './_lib/taskModel.js'
 import Project from './_lib/projectModel.js'
+import { verifyTokenFromCookie } from './_lib/authMiddleware.js'
 
 export default async function handler(req, res) {
   // Manejar preflight request
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
+  }
+
+  // Verificar autenticación para todos los métodos
+  const verification = verifyTokenFromCookie(req)
+  if (!verification.valid) {
+    return res.status(401).json({
+      status: 'ERROR',
+      message: verification.error || 'Authentication required',
+    })
   }
 
   if (req.method === 'GET') {
@@ -98,5 +108,8 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(405).json({ error: 'Method not allowed' })
+  return res.status(405).json({
+    status: 'ERROR',
+    message: 'Method not allowed',
+  })
 }
