@@ -4,6 +4,7 @@ import {
   logout,
   resendVerificationEmail,
 } from '../services/authService.js'
+import { showToast } from '../utils/toastConfig.js'
 
 /**
  * Handles login logic
@@ -32,7 +33,7 @@ export async function handleLogin({ email, password }) {
         await handleResendVerification(email)
       }
     } else {
-      alert(`Login failed: ${error.message}`)
+      showToast.error(`Login failed: ${error.message}`)
     }
   }
 }
@@ -57,7 +58,7 @@ export async function handleRegister({ name, email, password }) {
     window.router.navigate('/waiting-verification')
   } catch (error) {
     console.error('Registration failed:', error)
-    alert(`Registration failed: ${error.message}`)
+    showToast.error(`Registration failed: ${error.message}`)
   }
 }
 
@@ -74,7 +75,7 @@ export async function handleLogout() {
     window.router.navigate('/auth')
   } catch (error) {
     console.error('Logout failed:', error)
-    alert(`Logout failed: ${error.message}`)
+    showToast.error(`Logout failed: ${error.message}`)
   }
 }
 
@@ -87,9 +88,9 @@ export async function handleResendVerification(email) {
   try {
     const data = await resendVerificationEmail(email)
     console.log('Verification email sent:', data)
-    alert(data.message || 'Verification email sent! Please check your inbox.')
+    showToast.success(data.message || 'Verification email sent! Please check your inbox.')
   } catch (error) {
     console.error('Resend verification failed:', error)
-    alert(`Failed to resend verification email: ${error.message}`)
+    showToast.error(`Failed to resend verification email: ${error.message}`)
   }
 }
