@@ -1,5 +1,6 @@
 import { projectService } from '../services/projectService.js'
 import { tasksController } from './tasksController.js'
+import { showToast } from '../utils/toastConfig.js'
 import { ProjectSkeleton } from '../components/dashboard/ProjectSkeleton.js'
 import { createProjectListItem } from '../components/dashboard/ProjectListItem.js'
 import { ErrorState } from '../components/dashboard/ErrorState.js'
@@ -125,9 +126,11 @@ export const projectsController = {
       container.appendChild(projectElement)
 
       this.selectProject(newProject)
+      showToast.success('Project created successfully')
       return newProject
     } catch (error) {
       console.error('Error creating project:', error)
+      showToast.error('Error creating project')
       throw error
     }
   },
@@ -170,8 +173,10 @@ export const projectsController = {
       if (container && container.children.length === 0) {
         this._renderEmptyState(container)
       }
+      showToast.warning('Project deleted')
     } catch (error) {
       console.error('Error deleting project:', error)
+      showToast.error('Error deleting project')
     }
   },
 
