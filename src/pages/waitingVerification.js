@@ -1,5 +1,6 @@
 import cD from '../utils/createDocument.js'
 import { handleResendVerification } from '../controllers/authController.js'
+import { showToast } from '../utils/toastConfig.js'
 
 /**
  * Creates the waiting verification page
@@ -98,7 +99,7 @@ export default function waitingVerification() {
   // Resend button click handler
   resendButton.addEventListener('click', async () => {
     if (!email) {
-      alert('Email not found. Please register again.')
+      showToast.error('Email not found. Please register again.')
       window.router.navigate('/auth')
       return
     }
