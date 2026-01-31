@@ -1,63 +1,57 @@
-import { taskService } from '../services/taskService.js'
-import { TaskLayout } from '../components/dashboard/TaskLayout.js'
-import { TaskSkeleton } from '../components/dashboard/TaskSkeleton.js'
-import { Modal } from '../components/common/Modal.js'
-import { Task } from '../components/dashboard/Task.js'
+import { showToast } from '../utils/toastConfig.js';
+import { taskService } from '../services/taskService.js';
+import { TaskLayout } from '../components/dashboard/TaskLayout.js';
+import { TaskSkeleton } from '../components/dashboard/TaskSkeleton.js';
+import { Modal } from '../components/common/Modal.js';
+import { Task } from '../components/dashboard/Task.js';
 
 export const tasksController = {
   activeProjectId: null,
   taskCache: {},
 
   async renderTasks(project) {
-    this.activeProjectId = project._id
-    const container = document.querySelector('#tasks-section')
-    if (!container) return
+    this.activeProjectId = project._id;
+    const container = document.querySelector('#tasks-section');
+    if (!container) return;
 
-    // 1. Si NO hay caché, prepararemos el terreno para los skeletons
-    let tasks = this.taskCache[project._id]
+    let tasks = this.taskCache[project._id];
 
-    // 2. Render inicial del Layout (pasamos un array vacío temporal si no hay caché)
-    container.innerHTML = ''
+    container.innerHTML = '';
     const { header, listContainer } = TaskLayout(
       project,
-      tasks || [], // Si es null, pasamos vacío para que TaskLayout no explote
+      tasks || [],
       () => this._openCreateTaskModal(),
-      (t) => this._handleDeleteTask(t),
-      (t) => this._handleEditTask(t)
-    )
-    container.append(header, listContainer)
+      t => this._handleDeleteTask(t),
+      t => this._handleEditTask(t)
+    );
+    container.append(header, listContainer);
 
-    // 3. Lógica de carga
     if (!tasks) {
-      // MOSTRAR SKELETONS
-      listContainer.innerHTML = '' // Limpiamos el mensaje de "No hay tareas" temporalmente
-      this._renderSkeletons(listContainer, 4)
+      listContainer.innerHTML = '';
+      this._renderSkeletons(listContainer, 4);
 
       try {
-        tasks = await taskService.getByProject(project._id)
-        this.taskCache[project._id] = tasks
+        tasks = await taskService.getByProject(project._id);
+        this.taskCache[project._id] = tasks;
 
-        // 4. Reemplazar skeletons con la realidad
-        listContainer.innerHTML = ''
+        listContainer.innerHTML = '';
         if (tasks.length === 0) {
-          listContainer.innerHTML =
-            '<p class="text-theme-text-2">No hay tareas pendientes.</p>'
+          listContainer.innerHTML = '<p class="text-theme-text-2">No hay tareas pendientes.</p>';
         } else {
-          tasks.forEach((task) => {
-            const el = this._createTaskElement(task)
-            listContainer.appendChild(el)
-          })
+          tasks.forEach(task => {
+            const el = this._createTaskElement(task);
+            listContainer.appendChild(el);
+          });
         }
       } catch {
-        listContainer.innerHTML =
-          '<p class="text-theme-error">Error al cargar tareas.</p>'
+        listContainer.innerHTML = '<p class="text-theme-error">Error al cargar tareas.</p>';
       }
     }
   },
 
   _renderSkeletons(container, count) {
     for (let i = 0; i < count; i++) {
-      container.appendChild(TaskSkeleton())
+      container.appendChild(TaskSkeleton());
     }
   },
 
@@ -81,8 +75,8 @@ export const tasksController = {
         },
         { label: 'Due Date', type: 'date', name: 'dueDate' },
       ],
-      onSubmit: (data) => this._handleCreateTask(data),
-    })
+      onSubmit: data => this._handleCreateTask(data),
+    });
   },
 
   _createTaskElement(task) {
@@ -90,7 +84,7 @@ export const tasksController = {
       task,
       () => this._handleDeleteTask(task),
       () => this._handleEditTask(task)
-    )
+    );
   },
 
   async _handleCreateTask(data) {
@@ -98,23 +92,26 @@ export const tasksController = {
       const newTask = await taskService.create({
         ...data,
         projectId: this.activeProjectId,
-      })
+      });
+
+      showToast.success('Task Created');
 
       if (this.taskCache[this.activeProjectId]) {
-        this.taskCache[this.activeProjectId].push(newTask)
+        this.taskCache[this.activeProjectId].push(newTask);
       }
 
-      const listContainer = document.querySelector('#tasks-list')
+      const listContainer = document.querySelector('#tasks-list');
       if (listContainer) {
         if (this.taskCache[this.activeProjectId].length === 1) {
-          listContainer.innerHTML = ''
+          listContainer.innerHTML = '';
         }
-        const taskElement = this._createTaskElement(newTask)
-        taskElement.classList.add('fade-in-up')
-        listContainer.appendChild(taskElement)
+        const taskElement = this._createTaskElement(newTask);
+        taskElement.classList.add('fade-in-up');
+        listContainer.appendChild(taskElement);
       }
     } catch (error) {
-      console.error('Error creating task:', error)
+      showToast.error('Error creating task');
+      console.error('Error creating task:', error);
     }
   },
 
@@ -126,32 +123,33 @@ export const tasksController = {
       cancelText: 'Cancelar',
       onSubmit: async () => {
         try {
-          await taskService.delete(task._id)
+          await taskService.delete(task._id);
 
-          this.taskCache[this.activeProjectId] = this.taskCache[
-            this.activeProjectId
-          ].filter((t) => t._id !== task._id)
+          showToast.warning('Task Deleted');
 
-          const taskElement = document.getElementById(task._id)
+          this.taskCache[this.activeProjectId] = this.taskCache[this.activeProjectId].filter(
+            t => t._id !== task._id
+          );
+
+          const taskElement = document.getElementById(task._id);
 
           if (taskElement) {
-            taskElement.classList.add('fade-out')
+            taskElement.classList.add('fade-out');
 
-            await new Promise((resolve) => setTimeout(resolve, 300))
-            taskElement.remove()
+            await new Promise(resolve => setTimeout(resolve, 300));
+            taskElement.remove();
           }
 
-          const listContainer = document.querySelector('#tasks-list')
+          const listContainer = document.querySelector('#tasks-list');
           if (listContainer && listContainer.children.length === 0) {
-            listContainer.innerHTML =
-              '<p class="text-theme-text-2">No hay tareas pendientes.</p>'
+            listContainer.innerHTML = '<p class="text-theme-text-2">No hay tareas pendientes.</p>';
           }
         } catch (error) {
-          console.error('Error al borrar tarea:', error)
-          alert('No se pudo eliminar la tarea.')
+          console.error('Error al borrar tarea:', error);
+          showToast.error('The task could not be deleted');
         }
       },
-    })
+    });
   },
   async _handleEditTask(task) {
     Modal({
@@ -190,34 +188,35 @@ export const tasksController = {
           value: task.dueDate ? task.dueDate.split('T')[0] : '',
         },
       ],
-      onSubmit: async (formData) => {
+      onSubmit: async formData => {
         try {
           const updatedTask = await taskService.update(task._id, {
             ...formData,
             projectId: this.activeProjectId,
-          })
+          });
 
-          this.taskCache[this.activeProjectId] = this.taskCache[
-            this.activeProjectId
-          ].map((t) => (t._id === task._id ? updatedTask : t))
+          this.taskCache[this.activeProjectId] = this.taskCache[this.activeProjectId].map(t =>
+            t._id === task._id ? updatedTask : t
+          );
 
-          const oldElement = document.getElementById(task._id)
+          const oldElement = document.getElementById(task._id);
           if (oldElement) {
             const newElement = Task(
               updatedTask,
               () => this._handleDeleteTask(updatedTask),
               () => this._handleEditTask(updatedTask)
-            )
+            );
 
-            oldElement.replaceWith(newElement)
+            oldElement.replaceWith(newElement);
 
-            newElement.classList.add('highlight-flash')
+            newElement.classList.add('highlight-flash');
+            showToast.success('Task Updated');
           }
         } catch (error) {
-          console.error('Error updating task:', error)
-          alert('No se pudo actualizar la tarea.')
+          console.error('Error updating task:', error);
+          showToast.error('The task could not be updated');
         }
       },
-    })
+    });
   },
-}
+};
