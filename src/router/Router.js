@@ -27,20 +27,20 @@ export class Router {
    * @param {boolean} pushState - Whether to push to history
    */
   async navigate(path, pushState = true) {
+    // Mostrar loading
+    const loading = document.getElementById('loading');
+    loading?.classList.remove('hidden');
     try {
       // Find matching route
       const route = this.matchRoute(path);
-
       if (!route) {
         console.error('No route found for path:', path);
         return;
       }
-
       // Execute guard if exists
       if (route.guard) {
         const canActivate = await route.guard();
         if (!canActivate) {
-          // Guard failed, redirect based on route type
           const redirectPath = route.redirectOnFail || '/auth';
           if (path !== redirectPath) {
             return this.navigate(redirectPath, true);
@@ -48,26 +48,25 @@ export class Router {
           return;
         }
       }
-
       // Update browser URL
       if (pushState && window.location.pathname !== path) {
         window.history.pushState({}, '', path);
       }
-
       // Render page
       const page = await route.component();
       const app = document.getElementById('app');
       app.innerHTML = '';
       app.appendChild(page);
-
       this.currentRoute = route;
-
       // Call afterEnter hook if exists
       if (route.afterEnter) {
         route.afterEnter();
       }
     } catch (error) {
       console.error('Navigation error:', error);
+    } finally {
+      // Ocultar loading siempre (éxito o error)
+      loading?.classList.add('hidden');
     }
   }
 
