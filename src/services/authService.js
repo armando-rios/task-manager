@@ -1,13 +1,5 @@
 import { apiRequest } from './api.js';
 import { ENDPOINTS } from '../utils/constants.js';
-import {
-  isMockMode,
-  mockLogin,
-  mockRegister,
-  mockLogout,
-  mockCheckAuth,
-  mockGetCurrentUser,
-} from './mockAuth.js';
 
 /**
  * Login user with email and password
@@ -16,10 +8,6 @@ import {
  * @returns {Promise<Object>} User data
  */
 export async function login(email, password) {
-  if (isMockMode()) {
-    return mockLogin(email, password);
-  }
-
   const data = await apiRequest(ENDPOINTS.AUTH.LOGIN, {
     method: 'POST',
     credentials: 'include', // Important: send cookies
@@ -37,10 +25,6 @@ export async function login(email, password) {
  * @returns {Promise<Object>} User data
  */
 export async function register(name, email, password) {
-  if (isMockMode()) {
-    return mockRegister(name, email, password);
-  }
-
   const data = await apiRequest(ENDPOINTS.AUTH.REGISTER, {
     method: 'POST',
     credentials: 'include',
@@ -54,10 +38,6 @@ export async function register(name, email, password) {
  * Logout user
  */
 export async function logout() {
-  if (isMockMode()) {
-    return mockLogout();
-  }
-
   await apiRequest(ENDPOINTS.AUTH.LOGOUT, {
     method: 'POST',
     credentials: 'include',
@@ -69,16 +49,12 @@ export async function logout() {
  * @returns {Promise<boolean>} True if user is authenticated
  */
 export async function checkAuth() {
-  if (isMockMode()) {
-    return mockCheckAuth();
-  }
-
   try {
     const data = await apiRequest(ENDPOINTS.AUTH.ME, {
       credentials: 'include',
     });
     return !!data.user;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -88,16 +64,12 @@ export async function checkAuth() {
  * @returns {Promise<Object|null>} User data or null
  */
 export async function getCurrentUser() {
-  if (isMockMode()) {
-    return mockGetCurrentUser();
-  }
-
   try {
     const data = await apiRequest(ENDPOINTS.AUTH.ME, {
       credentials: 'include',
     });
     return data.user;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -108,15 +80,6 @@ export async function getCurrentUser() {
  * @returns {Promise<Object>} Verification result
  */
 export async function verifyEmail(token) {
-  if (isMockMode()) {
-    // Mock verification - always succeeds
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return {
-      status: 'OK',
-      message: 'Email verified successfully (mock mode)',
-    };
-  }
-
   const data = await apiRequest(`${ENDPOINTS.AUTH.VERIFY_EMAIL}?token=${token}`, {
     method: 'GET',
   });
@@ -130,15 +93,6 @@ export async function verifyEmail(token) {
  * @returns {Promise<Object>} Resend result
  */
 export async function resendVerificationEmail(email) {
-  if (isMockMode()) {
-    // Mock resend - always succeeds
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return {
-      status: 'OK',
-      message: 'Verification email sent (mock mode)',
-    };
-  }
-
   const data = await apiRequest(ENDPOINTS.AUTH.RESEND_VERIFICATION, {
     method: 'POST',
     body: JSON.stringify({ email }),
