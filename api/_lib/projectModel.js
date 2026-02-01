@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema(
   {
@@ -21,11 +21,10 @@ const projectSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-projectSchema.index({ userId: 1 })
+projectSchema.index({ userId: 1 });
 
-const Project =
-  mongoose.models.Project || mongoose.model('Project', projectSchema)
+const Project = mongoose.models.Project || mongoose.model('Project', projectSchema);
 
-export default Project
+export default Project;

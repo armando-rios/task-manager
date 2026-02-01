@@ -9,6 +9,7 @@ Task Manager is a complete task management solution that allows users to organiz
 ## Features
 
 ### Available
+
 - **User Authentication**: Secure registration and login with JWT tokens and httpOnly cookies
 - **Email Verification**: Email verification system using Resend API
 - **Project Management**: Create, view, and delete projects with descriptions
@@ -20,6 +21,7 @@ Task Manager is a complete task management solution that allows users to organiz
 - **Modern UI**: Clean interface with skeleton loaders and smooth transitions
 
 ### In Development
+
 - [ ] Task editing and deletion functionality
 - [ ] Priority filtering for tasks
 - [ ] Drag & Drop to reorder tasks
@@ -33,6 +35,7 @@ Task Manager is a complete task management solution that allows users to organiz
 ## Technologies Used
 
 ### Frontend
+
 - JavaScript (ES6+ Modules)
 - HTML5 and CSS3
 - Tailwind CSS v4
@@ -41,6 +44,7 @@ Task Manager is a complete task management solution that allows users to organiz
 - Client-side routing (SPA)
 
 ### Backend
+
 - Node.js with Express 5
 - MongoDB with Mongoose
 - JWT for authentication
@@ -51,6 +55,7 @@ Task Manager is a complete task management solution that allows users to organiz
 ## Installation and Usage
 
 ### Requirements
+
 - Node.js (v18.0.0 or higher)
 - MongoDB (local or cloud instance)
 - npm or yarn
@@ -145,6 +150,7 @@ task-manager/
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
@@ -153,11 +159,13 @@ task-manager/
 - `POST /api/auth/resend-verification` - Resend verification email
 
 ### Projects
+
 - `GET /api/projects` - Get user's projects
 - `POST /api/projects` - Create new project
 - `DELETE /api/projects` - Delete project
 
 ### Tasks
+
 - `GET /api/tasks` - Get all tasks
 - `POST /api/tasks` - Create new task
 - `PUT /api/tasks` - Update task

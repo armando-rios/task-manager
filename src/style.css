@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   color-scheme: light dark;
@@ -7,8 +7,8 @@
 /* --- Drag & Drop Visual Enhancements --- */
 .task {
   transition:
-    box-shadow 0.18s cubic-bezier(0.4,0,0.2,1),
-    transform 0.18s cubic-bezier(0.4,0,0.2,1),
+    box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.18s,
     border 0.18s;
   position: relative;
@@ -18,24 +18,30 @@
 .task.dragging {
   opacity: 0.6;
   transform: scale(1.04) rotate(1deg);
-  box-shadow: 0 8px 24px 0 rgb(0 0 0 / 0.25), 0 1.5px 4px 0 rgb(0 0 0 / 0.12);
+  box-shadow:
+    0 8px 24px 0 rgb(0 0 0 / 0.25),
+    0 1.5px 4px 0 rgb(0 0 0 / 0.12);
   z-index: 100;
 }
 
 .task.drag-over {
-  border: 2.5px dashed var(--color-theme-primary, #CBA6F7) !important;
+  border: 2.5px dashed var(--color-theme-primary, #cba6f7) !important;
   background: rgba(203, 166, 247, 0.08) !important;
-  transition: border 0.18s, background 0.18s;
+  transition:
+    border 0.18s,
+    background 0.18s;
 }
 
 .task-placeholder {
   height: 48px;
-  background: var(--color-theme-primary, #CBA6F7);
+  background: var(--color-theme-primary, #cba6f7);
   opacity: 0.18;
-  border: 2.5px dashed var(--color-theme-primary, #CBA6F7);
+  border: 2.5px dashed var(--color-theme-primary, #cba6f7);
   border-radius: 0.5rem;
   margin: 0.25rem 0;
-  transition: background 0.18s, border 0.18s;
+  transition:
+    background 0.18s,
+    border 0.18s;
   min-height: 44px;
   box-sizing: border-box;
   z-index: 10;
@@ -61,10 +67,10 @@
 /* catppuccin mocha theme */
 .catppuccin {
   --color-theme-surface-0: #181825;
-  --color-theme-surface-1: #1E1E2E;
+  --color-theme-surface-1: #1e1e2e;
   --color-theme-surface-2: #313244;
   --color-theme-surface-3: #45475a;
-  --color-theme-primary: #CBA6F7;
+  --color-theme-primary: #cba6f7;
   --color-theme-priority-low: #a6e3a1;
   --color-theme-priority-medium: #f9e2af;
   --color-theme-priority-high: #f38ba8;
@@ -74,16 +80,16 @@
 
 /* kanagawa theme */
 .kanagawa {
-  --color-theme-surface-0: #1F1F28;
-  --color-theme-surface-1: #2E2E38;
-  --color-theme-surface-2: #3E3E4A;
-  --color-theme-surface-3: #4E4E5A;
-  --color-theme-primary: #B4BEFE;
-  --color-theme-priority-low: #A6E3A1;
-  --color-theme-priority-medium: #E9D8EE;
-  --color-theme-priority-high: #E8A2AF;
-  --color-theme-text-0: #C0CAF5;
-  --color-theme-text-1: #A9B1D6;
+  --color-theme-surface-0: #1f1f28;
+  --color-theme-surface-1: #2e2e38;
+  --color-theme-surface-2: #3e3e4a;
+  --color-theme-surface-3: #4e4e5a;
+  --color-theme-primary: #b4befe;
+  --color-theme-priority-low: #a6e3a1;
+  --color-theme-priority-medium: #e9d8ee;
+  --color-theme-priority-high: #e8a2af;
+  --color-theme-text-0: #c0caf5;
+  --color-theme-text-1: #a9b1d6;
 }
 
 /* Tokyo Night theme - mejorado */

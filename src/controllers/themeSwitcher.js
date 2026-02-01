@@ -1,19 +1,37 @@
 export function initThemeSwitcher() {
   const savedTheme = localStorage.getItem('selected-theme') || 'catppuccin';
 
-  ['catppuccin', 'kanagawa', 'tokyo-night', 'gruvbox', 'nord', 'dracula', 'everforest', 'solarized'].forEach(theme => {
+  [
+    'catppuccin',
+    'kanagawa',
+    'tokyo-night',
+    'gruvbox',
+    'nord',
+    'dracula',
+    'everforest',
+    'solarized',
+  ].forEach(theme => {
     document.body.classList.remove(theme);
   });
 
   document.body.classList.add(savedTheme);
 
   document.querySelectorAll('[data-theme]').forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', e => {
       e.preventDefault();
 
       const themeName = e.currentTarget.dataset.theme;
 
-      ['catppuccin', 'kanagawa', 'tokyo-night', 'gruvbox', 'nord', 'dracula', 'everforest', 'solarized'].forEach(theme => {
+      [
+        'catppuccin',
+        'kanagawa',
+        'tokyo-night',
+        'gruvbox',
+        'nord',
+        'dracula',
+        'everforest',
+        'solarized',
+      ].forEach(theme => {
         document.body.classList.remove(theme);
       });
 
@@ -22,8 +40,9 @@ export function initThemeSwitcher() {
 
       document.getElementById('current-theme-name').textContent = e.currentTarget.textContent;
 
-      document.querySelectorAll('[data-theme]').forEach(el =>
-        el.classList.remove('bg-theme-surface-2'));
+      document
+        .querySelectorAll('[data-theme]')
+        .forEach(el => el.classList.remove('bg-theme-surface-2'));
       e.currentTarget.classList.add('bg-theme-surface-2');
 
       const dropdown = document.querySelector('#theme-dropdown > div');
@@ -39,7 +58,7 @@ export function initThemeSwitcher() {
     });
   }
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     const dropdown = document.getElementById('theme-dropdown');
     if (dropdown && !dropdown.contains(e.target)) {
       const menu = document.querySelector('#theme-dropdown > div');

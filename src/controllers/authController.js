@@ -1,10 +1,5 @@
-import {
-  login,
-  register,
-  logout,
-  resendVerificationEmail,
-} from '../services/authService.js'
-import { showToast } from '../utils/toastConfig.js'
+import { login, register, logout, resendVerificationEmail } from '../services/authService.js';
+import { showToast } from '../utils/toastConfig.js';
 
 /**
  * Handles login logic
@@ -15,25 +10,25 @@ import { showToast } from '../utils/toastConfig.js'
  */
 export async function handleLogin({ email, password }) {
   try {
-    const data = await login(email, password)
-    console.log('Login successful:', data)
+    const data = await login(email, password);
+    console.log('Login successful:', data);
 
     // Navigate to dashboard using router
-    window.router.navigate('/')
+    window.router.navigate('/');
   } catch (error) {
-    console.error('Login failed:', error)
+    console.error('Login failed:', error);
 
     // Check if error is due to unverified email
     if (error.message && error.message.includes('Email not verified')) {
       const resend = confirm(
         'Your email is not verified. Would you like to resend the verification email?'
-      )
+      );
 
       if (resend) {
-        await handleResendVerification(email)
+        await handleResendVerification(email);
       }
     } else {
-      showToast.error(`Login failed: ${error.message}`)
+      showToast.error(`Login failed: ${error.message}`);
     }
   }
 }
@@ -48,17 +43,17 @@ export async function handleLogin({ email, password }) {
  */
 export async function handleRegister({ name, email, password }) {
   try {
-    const data = await register(name, email, password)
-    console.log('Registration successful:', data)
+    const data = await register(name, email, password);
+    console.log('Registration successful:', data);
 
     // Store email for waiting verification page
-    sessionStorage.setItem('pending_verification_email', email)
+    sessionStorage.setItem('pending_verification_email', email);
 
     // Redirect to waiting verification page
-    window.router.navigate('/waiting-verification')
+    window.router.navigate('/waiting-verification');
   } catch (error) {
-    console.error('Registration failed:', error)
-    showToast.error(`Registration failed: ${error.message}`)
+    console.error('Registration failed:', error);
+    showToast.error(`Registration failed: ${error.message}`);
   }
 }
 
@@ -68,14 +63,14 @@ export async function handleRegister({ name, email, password }) {
  */
 export async function handleLogout() {
   try {
-    await logout()
-    console.log('Logout successful')
+    await logout();
+    console.log('Logout successful');
 
     // Navigate to auth page
-    window.router.navigate('/auth')
+    window.router.navigate('/auth');
   } catch (error) {
-    console.error('Logout failed:', error)
-    showToast.error(`Logout failed: ${error.message}`)
+    console.error('Logout failed:', error);
+    showToast.error(`Logout failed: ${error.message}`);
   }
 }
 
@@ -86,11 +81,11 @@ export async function handleLogout() {
  */
 export async function handleResendVerification(email) {
   try {
-    const data = await resendVerificationEmail(email)
-    console.log('Verification email sent:', data)
-    showToast.success(data.message || 'Verification email sent! Please check your inbox.')
+    const data = await resendVerificationEmail(email);
+    console.log('Verification email sent:', data);
+    showToast.success(data.message || 'Verification email sent! Please check your inbox.');
   } catch (error) {
-    console.error('Resend verification failed:', error)
-    showToast.error(`Failed to resend verification email: ${error.message}`)
+    console.error('Resend verification failed:', error);
+    showToast.error(`Failed to resend verification email: ${error.message}`);
   }
 }

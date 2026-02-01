@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const taskSchema = new mongoose.Schema(
   {
@@ -30,11 +30,11 @@ const taskSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
 // Índice para búsquedas rápidas por proyecto
-taskSchema.index({ projectId: 1 })
+taskSchema.index({ projectId: 1 });
 
-const Task = mongoose.models.Task || mongoose.model('Task', taskSchema)
+const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
 
-export default Task
+export default Task;

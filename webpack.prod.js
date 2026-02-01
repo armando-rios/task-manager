@@ -1,18 +1,18 @@
-import common from "./webpack.common.js"
-import MiniCssExtractPlugin from "mini-css-extract-plugin"
+import common from './webpack.common.js';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 export default {
   ...common,
-  mode: "production",
+  mode: 'production',
   output: {
     ...common.output,
-    filename: "main.[contenthash].js"
+    filename: 'main.[contenthash].js',
   },
   plugins: [
     ...common.plugins,
     new MiniCssExtractPlugin({
-      filename: "styles.[contenthash].css"
-    })
+      filename: 'styles.[contenthash].css',
+    }),
   ],
   module: {
     rules: [
@@ -20,23 +20,21 @@ export default {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "swc-loader"
-        }
+          loader: 'swc-loader',
+        },
       },
       {
         test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.(png|svg|jpg|jpeg|git)$/i,
-        type: "asset/resource"
-      }
-    ]
+        type: 'asset/resource',
+      },
+    ],
   },
   optimization: {
     minimize: true,
-    minimizer: [
-      "..."
-    ]
-  }
-}
+    minimizer: ['...'],
+  },
+};

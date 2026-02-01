@@ -1,9 +1,9 @@
-import { Resend } from 'resend'
+import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendVerificationEmail = async (email, name, verificationToken) => {
-  const verificationUrl = `${process.env.APP_URL}/verify-email?token=${verificationToken}`
+  const verificationUrl = `${process.env.APP_URL}/verify-email?token=${verificationToken}`;
 
   try {
     const { data, error } = await resend.emails.send({
@@ -66,16 +66,16 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
           </body>
         </html>
       `,
-    })
+    });
 
     if (error) {
-      console.error('Error sending verification email:', error)
-      throw new Error('Failed to send verification email')
+      console.error('Error sending verification email:', error);
+      throw new Error('Failed to send verification email');
     }
 
-    return { success: true, data }
+    return { success: true, data };
   } catch (error) {
-    console.error('Email service error:', error)
-    throw error
+    console.error('Email service error:', error);
+    throw error;
   }
-}
+};

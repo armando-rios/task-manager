@@ -1,10 +1,10 @@
-import { projectService } from '../services/projectService.js'
-import { tasksController } from './tasksController.js'
-import { showToast } from '../utils/toastConfig.js'
-import { ProjectSkeleton } from '../components/dashboard/ProjectSkeleton.js'
-import { createProjectListItem } from '../components/dashboard/ProjectListItem.js'
-import { ErrorState } from '../components/dashboard/ErrorState.js'
-import { EmptyState } from '../components/dashboard/ErrorState.js'
+import { projectService } from '../services/projectService.js';
+import { tasksController } from './tasksController.js';
+import { showToast } from '../utils/toastConfig.js';
+import { ProjectSkeleton } from '../components/dashboard/ProjectSkeleton.js';
+import { createProjectListItem } from '../components/dashboard/ProjectListItem.js';
+import { ErrorState } from '../components/dashboard/ErrorState.js';
+import { EmptyState } from '../components/dashboard/ErrorState.js';
 
 /**
  * Controller for managing projects
@@ -17,35 +17,35 @@ export const projectsController = {
    * Render the list of projects
    */
   async renderList() {
-    const container = document.querySelector('#projects-list')
-    if (!container) return
+    const container = document.querySelector('#projects-list');
+    if (!container) return;
 
-    container.innerHTML = ''
-    this._renderSkeletons(container, 3)
+    container.innerHTML = '';
+    this._renderSkeletons(container, 3);
 
     try {
-      const projects = await projectService.getAll()
-      this.projects = projects
-      container.innerHTML = ''
+      const projects = await projectService.getAll();
+      this.projects = projects;
+      container.innerHTML = '';
 
       if (projects.length === 0) {
-        this._renderEmptyState(container)
-        return
+        this._renderEmptyState(container);
+        return;
       }
 
       // Renderizamos usando el nuevo método centralizado
-      projects.forEach((project) => {
-        const projectElement = this._createProjectElement(project)
-        container.appendChild(projectElement)
-      })
+      projects.forEach(project => {
+        const projectElement = this._createProjectElement(project);
+        container.appendChild(projectElement);
+      });
 
       // AUTO-SELECCIÓN: Si no hay activo, seleccionamos el primero formalmente
       if (!this.activeProjectId && projects.length > 0) {
-        this.selectProject(projects[0])
+        this.selectProject(projects[0]);
       }
     } catch (error) {
-      console.error('Error loading projects:', error)
-      this._renderErrorState(container)
+      console.error('Error loading projects:', error);
+      this._renderErrorState(container);
     }
   },
 
@@ -60,43 +60,39 @@ export const projectsController = {
    * @param {string} projectId - ID of the project to select
    */
   selectProject(project) {
-    if (!project || !project._id) return
-    if (this.activeProjectId === project._id) return
+    if (!project || !project._id) return;
+    if (this.activeProjectId === project._id) return;
 
-    const previousProjectId = this.activeProjectId
-    this.activeProjectId = project._id
+    const previousProjectId = this.activeProjectId;
+    this.activeProjectId = project._id;
 
-    const activeStyles = ['bg-theme-surface-2', 'text-theme-primary']
-    const inactiveStyles = ['text-theme-text-2', 'hover:bg-theme-surface-2']
+    const activeStyles = ['bg-theme-surface-2', 'text-theme-primary'];
+    const inactiveStyles = ['text-theme-text-2', 'hover:bg-theme-surface-2'];
 
     // 2. Limpiar el anterior (si existe)
     if (previousProjectId) {
-      const prevElement = document.querySelector(
-        `[data-project-id="${previousProjectId}"]`
-      )
+      const prevElement = document.querySelector(`[data-project-id="${previousProjectId}"]`);
       if (prevElement) {
-        prevElement.classList.remove(...activeStyles)
-        prevElement.classList.add(...inactiveStyles) // Devolvemos el estilo gris y el hover
+        prevElement.classList.remove(...activeStyles);
+        prevElement.classList.add(...inactiveStyles); // Devolvemos el estilo gris y el hover
       }
     }
 
     // 3. Activar el nuevo
-    const currentElement = document.querySelector(
-      `[data-project-id="${project._id}"]`
-    )
+    const currentElement = document.querySelector(`[data-project-id="${project._id}"]`);
     if (currentElement) {
-      currentElement.classList.add(...activeStyles)
-      currentElement.classList.remove(...inactiveStyles) // Quitamos el hover porque ya está activo
+      currentElement.classList.add(...activeStyles);
+      currentElement.classList.remove(...inactiveStyles); // Quitamos el hover porque ya está activo
     }
 
     // 4. Lógica de negocio
-    tasksController.renderTasks(project)
+    tasksController.renderTasks(project);
 
     document.dispatchEvent(
       new CustomEvent('projectSelected', {
         detail: { projectId: project._id },
       })
-    )
+    );
   },
 
   /**
@@ -106,32 +102,32 @@ export const projectsController = {
     return createProjectListItem(
       project,
       this.activeProjectId,
-      (id) => this.deleteProject(id),
-      (p) => this.selectProject(p)
-    )
+      id => this.deleteProject(id),
+      p => this.selectProject(p)
+    );
   },
 
   async createProject(projectData) {
     try {
-      const newProject = await projectService.create(projectData)
-      this.projects.push(newProject)
+      const newProject = await projectService.create(projectData);
+      this.projects.push(newProject);
 
-      const container = document.querySelector('#projects-list')
+      const container = document.querySelector('#projects-list');
 
       // Si era el primero, limpiamos el "Empty State"
-      if (this.projects.length === 1) container.innerHTML = ''
+      if (this.projects.length === 1) container.innerHTML = '';
 
       // Usamos el método centralizado aquí también
-      const projectElement = this._createProjectElement(newProject)
-      container.appendChild(projectElement)
+      const projectElement = this._createProjectElement(newProject);
+      container.appendChild(projectElement);
 
-      this.selectProject(newProject)
-      showToast.success('Project created successfully')
-      return newProject
+      this.selectProject(newProject);
+      showToast.success('Project created successfully');
+      return newProject;
     } catch (error) {
-      console.error('Error creating project:', error)
-      showToast.error('Error creating project')
-      throw error
+      console.error('Error creating project:', error);
+      showToast.error('Error creating project');
+      throw error;
     }
   },
 
@@ -141,42 +137,40 @@ export const projectsController = {
    */
   async deleteProject(projectId) {
     try {
-      await projectService.delete(projectId)
+      await projectService.delete(projectId);
 
-      const elementToRemove = document.querySelector(
-        `[data-project-id="${projectId}"]`
-      )
-      if (elementToRemove) elementToRemove.remove()
+      const elementToRemove = document.querySelector(`[data-project-id="${projectId}"]`);
+      if (elementToRemove) elementToRemove.remove();
 
       // Actualizar la lista local quitando el borrado
-      this.projects = this.projects.filter((p) => p._id !== projectId)
+      this.projects = this.projects.filter(p => p._id !== projectId);
 
       if (this.activeProjectId === projectId) {
-        this.activeProjectId = null
-        document.dispatchEvent(new CustomEvent('projectDeselected'))
+        this.activeProjectId = null;
+        document.dispatchEvent(new CustomEvent('projectDeselected'));
 
-        const firstProjectElement = document.querySelector('[data-project-id]')
+        const firstProjectElement = document.querySelector('[data-project-id]');
 
         if (firstProjectElement) {
-          const nextId = firstProjectElement.dataset.projectId
+          const nextId = firstProjectElement.dataset.projectId;
           // Buscamos el objeto completo para que selectProject no falle
-          const nextProject = this.projects.find((p) => p._id === nextId)
+          const nextProject = this.projects.find(p => p._id === nextId);
 
           if (nextProject) {
-            this.selectProject(nextProject)
+            this.selectProject(nextProject);
           }
         }
       }
 
       // 3. Verificar si la lista quedó vacía para mostrar el Empty State
-      const container = document.querySelector('#projects-list')
+      const container = document.querySelector('#projects-list');
       if (container && container.children.length === 0) {
-        this._renderEmptyState(container)
+        this._renderEmptyState(container);
       }
-      showToast.warning('Project deleted')
+      showToast.warning('Project deleted');
     } catch (error) {
-      console.error('Error deleting project:', error)
-      showToast.error('Error deleting project')
+      console.error('Error deleting project:', error);
+      showToast.error('Error deleting project');
     }
   },
 
@@ -185,7 +179,7 @@ export const projectsController = {
    * @param {HTMLElement} container
    */
   _renderEmptyState(container) {
-    EmptyState(container)
+    EmptyState(container);
   },
 
   /**
@@ -193,7 +187,7 @@ export const projectsController = {
    * @param {HTMLElement} container
    */
   _renderErrorState(container) {
-    ErrorState(container)
+    ErrorState(container);
   },
 
   /**
@@ -203,8 +197,8 @@ export const projectsController = {
    */
   _renderSkeletons(container, count = 3) {
     for (let i = 0; i < count; i++) {
-      const skeleton = ProjectSkeleton()
-      container.appendChild(skeleton)
+      const skeleton = ProjectSkeleton();
+      container.appendChild(skeleton);
     }
   },
-}
+};

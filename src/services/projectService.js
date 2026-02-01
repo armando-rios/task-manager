@@ -1,13 +1,13 @@
-import { apiRequest } from './api.js'
-import { ENDPOINTS } from '../utils/constants.js'
+import { apiRequest } from './api.js';
+import { ENDPOINTS } from '../utils/constants.js';
 
 export const projectService = {
   /**
    * Get all projects
    */
   async getAll() {
-    const response = await apiRequest(ENDPOINTS.PROJECTS)
-    return response.projects
+    const response = await apiRequest(ENDPOINTS.PROJECTS);
+    return response.projects;
   },
 
   /**
@@ -17,8 +17,8 @@ export const projectService = {
     const response = await apiRequest(ENDPOINTS.PROJECTS, {
       method: 'POST',
       body: JSON.stringify(projectData),
-    })
-    return response.project
+    });
+    return response.project;
   },
 
   /**
@@ -28,8 +28,8 @@ export const projectService = {
     const response = await apiRequest(ENDPOINTS.PROJECTS, {
       method: 'PUT',
       body: JSON.stringify({ id, ...projectData }),
-    })
-    return response.project
+    });
+    return response.project;
   },
 
   /**
@@ -39,7 +39,7 @@ export const projectService = {
     const response = await apiRequest(ENDPOINTS.PROJECTS, {
       method: 'DELETE',
       body: JSON.stringify({ id }),
-    })
-    return response.project
+    });
+    return response.project;
   },
-}
+};

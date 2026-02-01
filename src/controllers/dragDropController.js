@@ -3,12 +3,12 @@ let draggedItemIndex = null;
 let placeholder = null;
 
 export function initDragDropController() {
-  const tasksContainer = document.querySelector("#tasks-container");
+  const tasksContainer = document.querySelector('#tasks-container');
   if (!tasksContainer) return;
 
   const tasks = tasksContainer.querySelectorAll('.task');
 
-  tasks.forEach((task) => {
+  tasks.forEach(task => {
     task.addEventListener('dragstart', handleDragStart);
 
     task.addEventListener('dragover', handleDragOver);
@@ -22,7 +22,7 @@ export function initDragDropController() {
     task.addEventListener('dragend', handleDragEnd);
   });
 
-  tasksContainer.addEventListener('dragover', function(e) {
+  tasksContainer.addEventListener('dragover', function (e) {
     e.preventDefault();
     if (!placeholder) return;
     // Si el mouse está debajo de la última tarea, mueve el placeholder al final
@@ -34,7 +34,7 @@ export function initDragDropController() {
     }
   });
 
-  tasksContainer.addEventListener('drop', function(e) {
+  tasksContainer.addEventListener('drop', function (e) {
     e.preventDefault();
     if (placeholder && draggedItem) {
       tasksContainer.insertBefore(draggedItem, placeholder);
@@ -53,7 +53,7 @@ export function initDragDropController() {
 
 function handleDragStart(e) {
   draggedItem = this;
-  const tasksContainer = document.querySelector("#tasks-container");
+  const tasksContainer = document.querySelector('#tasks-container');
   draggedItemIndex = Array.from(tasksContainer.children).indexOf(this);
 
   // Crear el placeholder visual
@@ -80,7 +80,7 @@ function handleDragOver(e) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
 
-  const tasksContainer = document.querySelector("#tasks-container");
+  const tasksContainer = document.querySelector('#tasks-container');
   if (!placeholder) return false;
 
   // Encuentra la tarea sobre la que está el mouse
@@ -120,7 +120,7 @@ function handleDragLeave(e) {
 function handleDrop(e) {
   e.stopPropagation(); // Detener propagación del evento
 
-  const tasksContainer = document.querySelector("#tasks-container");
+  const tasksContainer = document.querySelector('#tasks-container');
   if (draggedItem !== this) {
     // Inserta el draggedItem en la posición del placeholder
     if (placeholder) {
@@ -160,12 +160,12 @@ function handleDragEnd(e) {
 }
 
 function saveTasksOrder() {
-  const tasksContainer = document.querySelector("#tasks-container");
+  const tasksContainer = document.querySelector('#tasks-container');
   const taskIds = Array.from(tasksContainer.children)
     .filter(el => el.classList.contains('task')) // Solo consideramos elementos que son tareas
     .map(task => task.id);
 
-  const tasksDB = JSON.parse(localStorage.getItem("tasks")) || [];
+  const tasksDB = JSON.parse(localStorage.getItem('tasks')) || [];
 
   const orderedTasks = [];
 
@@ -182,7 +182,7 @@ function saveTasksOrder() {
     }
   });
 
-  localStorage.setItem("tasks", JSON.stringify(orderedTasks));
+  localStorage.setItem('tasks', JSON.stringify(orderedTasks));
 
   console.log('Orden de tareas guardado');
 }

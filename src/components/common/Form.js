@@ -1,5 +1,5 @@
-import cD from '../../utils/createDocument.js'
-import { Input } from './Input.js'
+import cD from '../../utils/createDocument.js';
+import { Input } from './Input.js';
 
 /**
  * Create a dynamic form with inputs
@@ -24,19 +24,19 @@ export const Form = ({
     tagName: 'form',
     id: id,
     styles: 'flex flex-col gap-4',
-  })
+  });
 
   // Generate inputs
-  inputs.forEach((inputConfig) => {
-    const input = Input(inputConfig)
-    form.appendChild(input)
-  })
+  inputs.forEach(inputConfig => {
+    const input = Input(inputConfig);
+    form.appendChild(input);
+  });
 
   // Buttons container
   const buttonsContainer = cD({
     tagName: 'div',
     styles: 'flex gap-2 justify-end mt-2',
-  })
+  });
 
   // Cancel button
   if (onCancel) {
@@ -46,10 +46,10 @@ export const Form = ({
       styles:
         'px-4 py-2 bg-theme-surface-2 text-theme-text-0 rounded-md hover:bg-theme-surface-3 transition-colors',
       textContent: cancelText,
-    })
+    });
 
-    cancelButton.addEventListener('click', onCancel)
-    buttonsContainer.appendChild(cancelButton)
+    cancelButton.addEventListener('click', onCancel);
+    buttonsContainer.appendChild(cancelButton);
   }
 
   // Submit button
@@ -59,22 +59,22 @@ export const Form = ({
     styles:
       'px-4 py-2 bg-theme-primary text-theme-surface-0 font-semibold rounded-md hover:bg-opacity-90 transition-colors',
     textContent: submitText,
-  })
+  });
 
-  buttonsContainer.appendChild(submitButton)
-  form.appendChild(buttonsContainer)
+  buttonsContainer.appendChild(submitButton);
+  form.appendChild(buttonsContainer);
 
   // Handle submit
-  form.addEventListener('submit', (e) => {
-    e.preventDefault()
+  form.addEventListener('submit', e => {
+    e.preventDefault();
 
-    const formData = new FormData(form)
-    const data = Object.fromEntries(formData.entries())
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
     if (onSubmit) {
-      onSubmit(data)
+      onSubmit(data);
     }
-  })
+  });
 
-  return form
-}
+  return form;
+};

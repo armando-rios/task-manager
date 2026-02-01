@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api'
+const API_BASE_URL = '/api';
 
 export const ENDPOINTS = {
   // Auth endpoints
@@ -13,4 +13,4 @@ export const ENDPOINTS = {
   // Resource endpoints
   PROJECTS: `${API_BASE_URL}/projects`,
   TASKS: `${API_BASE_URL}/tasks`,
-}
+};

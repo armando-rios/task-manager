@@ -1,4 +1,4 @@
-import cD from '../../utils/createDocument.js'
+import cD from '../../utils/createDocument.js';
 
 /**
  * Create a single input field with label
@@ -24,16 +24,16 @@ export const Input = ({
   const inputGroup = cD({
     tagName: 'div',
     styles: 'flex flex-col gap-1',
-  })
+  });
 
   const labelElement = cD({
     tagName: 'label',
     styles: 'text-theme-text-1 text-sm font-medium',
     textContent: label,
-  })
-  labelElement.htmlFor = name
+  });
+  labelElement.htmlFor = name;
 
-  let inputElement
+  let inputElement;
 
   if (type === 'select') {
     inputElement = cD({
@@ -42,34 +42,34 @@ export const Input = ({
       name: name,
       styles:
         'px-3 py-2 bg-theme-surface-1 text-theme-text-0 rounded-md border border-theme-surface-3 focus:outline-none focus:ring-2 focus:ring-theme-primary cursor-pointer',
-    })
+    });
 
     // Añadir placeholder si existe
     if (placeholder) {
       const placeholderOption = cD({
         tagName: 'option',
         textContent: placeholder,
-      })
-      placeholderOption.value = ''
-      placeholderOption.disabled = true
-      placeholderOption.selected = !value
-      inputElement.appendChild(placeholderOption)
+      });
+      placeholderOption.value = '';
+      placeholderOption.disabled = true;
+      placeholderOption.selected = !value;
+      inputElement.appendChild(placeholderOption);
     }
 
     // Añadir opciones
-    options.forEach((option) => {
+    options.forEach(option => {
       const optionElement = cD({
         tagName: 'option',
         textContent: option.label || option.text,
-      })
-      optionElement.value = option.value
+      });
+      optionElement.value = option.value;
 
       if (option.value === value) {
-        optionElement.selected = true
+        optionElement.selected = true;
       }
 
-      inputElement.appendChild(optionElement)
-    })
+      inputElement.appendChild(optionElement);
+    });
   } else if (type === 'textarea') {
     inputElement = cD({
       tagName: 'textarea',
@@ -78,9 +78,9 @@ export const Input = ({
       styles:
         'px-3 py-2 bg-theme-surface-1 text-theme-text-0 rounded-md border border-theme-surface-3 focus:outline-none focus:ring-2 focus:ring-theme-primary resize-none',
       placeholder: placeholder,
-    })
-    inputElement.rows = 3
-    inputElement.value = value
+    });
+    inputElement.rows = 3;
+    inputElement.value = value;
   } else {
     inputElement = cD({
       tagName: 'input',
@@ -90,15 +90,15 @@ export const Input = ({
       styles:
         'px-3 py-2 bg-theme-surface-1 text-theme-text-0 rounded-md border border-theme-surface-3 focus:outline-none focus:ring-2 focus:ring-theme-primary',
       placeholder: placeholder,
-    })
-    inputElement.value = value
+    });
+    inputElement.value = value;
   }
 
   if (required) {
-    inputElement.required = true
+    inputElement.required = true;
   }
 
-  inputGroup.append(labelElement, inputElement)
+  inputGroup.append(labelElement, inputElement);
 
-  return inputGroup
-}
+  return inputGroup;
+};

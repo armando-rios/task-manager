@@ -1,6 +1,6 @@
-import cD from '../../utils/createDocument.js'
-import { Input } from '../common/Input.js'
-import { Button } from '../common/Button.js'
+import cD from '../../utils/createDocument.js';
+import { Input } from '../common/Input.js';
+import { Button } from '../common/Button.js';
 
 /**
  * Creates a login form component
@@ -11,7 +11,7 @@ export function LoginForm(onSubmit) {
   const form = cD({
     tagName: 'form',
     styles: 'flex flex-col gap-4',
-  })
+  });
 
   // Email input
   const emailInput = Input({
@@ -20,7 +20,7 @@ export function LoginForm(onSubmit) {
     placeholder: 'your@email.com',
     required: true,
     name: 'email',
-  })
+  });
 
   // Password input
   const passwordInput = Input({
@@ -29,32 +29,32 @@ export function LoginForm(onSubmit) {
     placeholder: '••••••••',
     required: true,
     name: 'password',
-  })
+  });
 
   // Submit button
   const submitButton = Button({
     text: 'Login',
     type: 'submit',
     variant: 'primary',
-  })
+  });
 
   // Handle form submission
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
 
     // ✅ Usar FormData para extraer valores por name
-    const formData = new FormData(form)
+    const formData = new FormData(form);
     const credentials = {
       email: formData.get('email'),
       password: formData.get('password'),
-    }
+    };
 
     if (onSubmit) {
-      await onSubmit(credentials)
+      await onSubmit(credentials);
     }
-  })
+  });
 
-  form.append(emailInput, passwordInput, submitButton)
+  form.append(emailInput, passwordInput, submitButton);
 
-  return form
+  return form;
 }

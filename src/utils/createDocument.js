@@ -8,13 +8,13 @@
  * @returns {HTMLElement} The newly created HTML element.
  */
 export default function createElement({ tagName, styles, ...props }) {
-  const element = document.createElement(tagName)
+  const element = document.createElement(tagName);
 
   if (styles) {
-    element.className = styles
+    element.className = styles;
   }
 
-  Object.assign(element, props)
+  Object.assign(element, props);
 
-  return element
+  return element;
 }

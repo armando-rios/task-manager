@@ -10,28 +10,26 @@ export async function apiRequest(url, options = {}) {
         ...options.headers,
       },
       ...options,
-    })
+    });
 
     // Try to parse as JSON, handle errors gracefully
-    let data
+    let data;
     try {
-      data = await response.json()
+      data = await response.json();
     } catch (parseError) {
       // If JSON parsing fails, try to get text for better error message
-      const text = await response.text()
-      console.error('Failed to parse JSON response:', text.substring(0, 200))
-      throw new Error(
-        `Server returned invalid JSON response (${response.status})`
-      )
+      const text = await response.text();
+      console.error('Failed to parse JSON response:', text.substring(0, 200));
+      throw new Error(`Server returned invalid JSON response (${response.status})`);
     }
 
     if (!response.ok) {
-      throw new Error(data.message || 'API Error')
+      throw new Error(data.message || 'API Error');
     }
 
-    return data
+    return data;
   } catch (error) {
-    console.error('API Request Error:', error)
-    throw error
+    console.error('API Request Error:', error);
+    throw error;
   }
 }

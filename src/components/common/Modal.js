@@ -1,5 +1,5 @@
-import cD from '../../utils/createDocument.js'
-import { Form } from './Form.js'
+import cD from '../../utils/createDocument.js';
+import { Form } from './Form.js';
 
 /**
  * Create a modal overlay
@@ -22,28 +22,26 @@ export const Modal = ({
   const modal = cD({
     tagName: 'div',
     id: 'modal',
-    styles:
-      'fixed inset-0 bg-theme-surface-1/50 flex justify-center items-center z-50',
-  })
+    styles: 'fixed inset-0 bg-theme-surface-1/50 flex justify-center items-center z-50',
+  });
 
   // Modal content
   const content = cD({
     tagName: 'div',
-    styles:
-      'bg-theme-surface-0 p-6 rounded-lg shadow-xl flex flex-col gap-4 min-w-96',
-  })
+    styles: 'bg-theme-surface-0 p-6 rounded-lg shadow-xl flex flex-col gap-4 min-w-96',
+  });
 
   // Title
   const titleElement = cD({
     tagName: 'h2',
     styles: 'text-xl text-theme-primary font-bold',
     textContent: title,
-  })
+  });
 
   // Close modal function
   function closeModal() {
-    modal.remove()
-    document.removeEventListener('keydown', handleEscape)
+    modal.remove();
+    document.removeEventListener('keydown', handleEscape);
   }
 
   // Form with auto-close on submit
@@ -52,43 +50,43 @@ export const Modal = ({
     inputs,
     submitText,
     cancelText,
-    onSubmit: (data) => {
+    onSubmit: data => {
       if (onSubmit) {
-        onSubmit(data)
+        onSubmit(data);
       }
-      closeModal()
+      closeModal();
     },
     onCancel: closeModal,
-  })
+  });
 
   // Close on overlay click
-  modal.addEventListener('click', (e) => {
+  modal.addEventListener('click', e => {
     if (e.target === modal) {
-      closeModal()
+      closeModal();
     }
-  })
+  });
 
   // Close on Escape
-  const handleEscape = (e) => {
+  const handleEscape = e => {
     if (e.key === 'Escape') {
-      closeModal()
+      closeModal();
     }
-  }
-  document.addEventListener('keydown', handleEscape)
+  };
+  document.addEventListener('keydown', handleEscape);
 
   // Assemble
-  content.append(titleElement, form)
-  modal.appendChild(content)
-  document.body.appendChild(modal)
+  content.append(titleElement, form);
+  modal.appendChild(content);
+  document.body.appendChild(modal);
 
   // Focus first input
   setTimeout(() => {
-    const firstInput = form.querySelector('input, textarea')
-    if (firstInput) firstInput.focus()
-  }, 0)
+    const firstInput = form.querySelector('input, textarea');
+    if (firstInput) firstInput.focus();
+  }, 0);
 
   return {
     element: modal,
     close: closeModal,
-  }
-}
+  };
+};

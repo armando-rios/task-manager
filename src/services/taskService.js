@@ -1,23 +1,23 @@
-import { apiRequest } from './api.js'
-import { ENDPOINTS } from '../utils/constants.js'
+import { apiRequest } from './api.js';
+import { ENDPOINTS } from '../utils/constants.js';
 
 export const taskService = {
   /**
    * Get all tasks
    */
   async getAll() {
-    const response = await apiRequest(ENDPOINTS.TASKS)
-    return response.tasks
+    const response = await apiRequest(ENDPOINTS.TASKS);
+    return response.tasks;
   },
 
   async getByProject(projectId) {
-    if (!projectId) throw new Error('projectId is required')
+    if (!projectId) throw new Error('projectId is required');
 
-    const response = await fetch(`/api/tasks?projectId=${projectId}`)
-    const data = await response.json()
+    const response = await fetch(`/api/tasks?projectId=${projectId}`);
+    const data = await response.json();
 
-    if (data.status === 'ERROR') throw new Error(data.message)
-    return data.tasks
+    if (data.status === 'ERROR') throw new Error(data.message);
+    return data.tasks;
   },
 
   /**
@@ -27,8 +27,8 @@ export const taskService = {
     const response = await apiRequest(ENDPOINTS.TASKS, {
       method: 'POST',
       body: JSON.stringify(taskData),
-    })
-    return response.task
+    });
+    return response.task;
   },
 
   /**
@@ -38,8 +38,8 @@ export const taskService = {
     const response = await apiRequest(ENDPOINTS.TASKS, {
       method: 'PUT',
       body: JSON.stringify({ id, ...taskData }),
-    })
-    return response.task
+    });
+    return response.task;
   },
 
   /**
@@ -49,7 +49,7 @@ export const taskService = {
     const response = await apiRequest(ENDPOINTS.TASKS, {
       method: 'DELETE',
       body: JSON.stringify({ id }),
-    })
-    return response.task
+    });
+    return response.task;
   },
-}
+};

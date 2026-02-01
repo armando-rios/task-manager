@@ -1,13 +1,12 @@
-import { verifyEmail } from '../services/authService.js'
+import { verifyEmail } from '../services/authService.js';
 
 export default async function verifyEmailPage() {
-  const container = document.createElement('div')
-  container.className =
-    'min-h-screen flex items-center justify-center bg-base px-4'
+  const container = document.createElement('div');
+  container.className = 'min-h-screen flex items-center justify-center bg-base px-4';
 
   // Extract token from URL
-  const urlParams = new URLSearchParams(window.location.search)
-  const token = urlParams.get('token')
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
 
   if (!token) {
     container.innerHTML = `
@@ -23,13 +22,13 @@ export default async function verifyEmailPage() {
           Go to Login
         </button>
       </div>
-    `
+    `;
 
     container.querySelector('#go-to-login').addEventListener('click', () => {
-      window.router.navigate('/auth')
-    })
+      window.router.navigate('/auth');
+    });
 
-    return container
+    return container;
   }
 
   // Show loading state
@@ -41,11 +40,11 @@ export default async function verifyEmailPage() {
       <h1 class="text-2xl font-bold text-text mb-4">Verifying Email...</h1>
       <p class="text-subtext0">Please wait while we verify your email address.</p>
     </div>
-  `
+  `;
 
   // Verify email
   try {
-    const result = await verifyEmail(token)
+    const result = await verifyEmail(token);
 
     container.innerHTML = `
       <div class="bg-surface rounded-lg shadow-xl p-8 max-w-md w-full text-center">
@@ -61,19 +60,19 @@ export default async function verifyEmailPage() {
           Go to Login Now
         </button>
       </div>
-    `
+    `;
 
     // Auto redirect after 3 seconds
     const redirectTimeout = setTimeout(() => {
-      window.router.navigate('/auth')
-    }, 3000)
+      window.router.navigate('/auth');
+    }, 3000);
 
     container.querySelector('#go-to-login').addEventListener('click', () => {
-      clearTimeout(redirectTimeout)
-      window.router.navigate('/auth')
-    })
+      clearTimeout(redirectTimeout);
+      window.router.navigate('/auth');
+    });
   } catch (error) {
-    console.error('Verification error:', error)
+    console.error('Verification error:', error);
 
     container.innerHTML = `
       <div class="bg-surface rounded-lg shadow-xl p-8 max-w-md w-full text-center">
@@ -93,16 +92,16 @@ export default async function verifyEmailPage() {
           </button>
         </div>
       </div>
-    `
+    `;
 
     container.querySelector('#go-to-resend').addEventListener('click', () => {
-      window.router.navigate('/auth?tab=register')
-    })
+      window.router.navigate('/auth?tab=register');
+    });
 
     container.querySelector('#go-to-auth').addEventListener('click', () => {
-      window.router.navigate('/auth')
-    })
+      window.router.navigate('/auth');
+    });
   }
 
-  return container
+  return container;
 }
