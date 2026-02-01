@@ -114,7 +114,7 @@ export default function waitingVerification() {
         resendButton.textContent = 'Resend Verification Email';
         resendButton.disabled = false;
       }, 3000);
-    } catch (error) {
+    } catch {
       resendButton.textContent = 'Resend Verification Email';
       resendButton.disabled = false;
     }

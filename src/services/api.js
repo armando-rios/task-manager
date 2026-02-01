@@ -16,7 +16,7 @@ export async function apiRequest(url, options = {}) {
     let data;
     try {
       data = await response.json();
-    } catch (parseError) {
+    } catch {
       // If JSON parsing fails, try to get text for better error message
       const text = await response.text();
       console.error('Failed to parse JSON response:', text.substring(0, 200));
