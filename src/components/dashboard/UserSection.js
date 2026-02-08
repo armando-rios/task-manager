@@ -1,43 +1,19 @@
 import cD from '../../utils/createDocument.js';
-import { Logout } from '../common/LogoutButton.js';
+import { UserDropdown } from '../common/UserDropdown.js';
 
-export function UserSection() {
+export function UserSection(user) {
+  const userData = user || {};
+
   const userSection = cD({
     tagName: 'div',
     styles: 'sm:hidden py-4 flex-shrink-0',
   });
 
-  const userInfo = cD({
-    tagName: 'div',
-    styles: 'flex items-center justify-between',
-  });
+  const userDropdown = UserDropdown({ user: userData, direction: 'up' });
 
-  const userDetails = cD({
-    tagName: 'div',
-    styles: 'flex items-center gap-3',
-  });
-
-  const userAvatar = cD({
-    tagName: 'div',
-    styles:
-      'w-10 h-10 rounded-full bg-theme-primary flex items-center justify-center text-theme-surface-0 font-semibold text-lg',
-  });
-
-  const userName = cD({
-    tagName: 'div',
-    styles: 'text-theme-text-0 font-medium',
-  });
-
-  const logout = Logout();
-
-  userDetails.append(userAvatar, userName);
-  userInfo.append(userDetails, logout);
-  userSection.append(userInfo);
+  userSection.append(userDropdown.element);
 
   return {
     element: userSection,
-    userAvatar,
-    userName,
-    logout,
   };
 }

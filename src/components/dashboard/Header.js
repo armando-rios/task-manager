@@ -1,6 +1,6 @@
 import cD from '../../utils/createDocument.js';
 import { BurgerMenu } from './BurgerMenu.js';
-import { Logout } from '../common/LogoutButton.js';
+import { UserDropdown } from '../common/UserDropdown.js';
 
 export const Header = user => {
   const header = cD({
@@ -17,20 +17,14 @@ export const Header = user => {
 
   const userSection = cD({
     tagName: 'div',
-    styles: 'flex items-center gap-4 max-sm:hidden',
+    styles: 'relative max-sm:hidden',
   });
 
-  const userName = cD({
-    tagName: 'span',
-    styles: 'text-theme-text-0',
-    textContent: user ? `Welcome, ${user.name}` : 'Welcome',
-  });
-
-  const logoutButton = Logout();
+  const userDropdown = UserDropdown({ user, direction: 'down' });
+  userSection.append(userDropdown.element);
 
   const burgerMenu = BurgerMenu();
 
-  userSection.append(userName, logoutButton);
   header.append(title, burgerMenu, userSection);
 
   return header;

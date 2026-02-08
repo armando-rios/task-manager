@@ -5,7 +5,7 @@ import { PriorityFilters } from './PriorityFilters.js';
 import { projectsController } from '../../controllers/projectsController.js';
 import { Modal } from '../../components/common/Modal.js';
 
-export function Sidebar() {
+export function Sidebar(user) {
   const sidebarContainer = cD({
     tagName: 'div',
     styles:
@@ -56,7 +56,7 @@ export function Sidebar() {
   // Create sub-components
   const projectsList = ProjectsList();
   const priorityFilters = PriorityFilters();
-  const userSection = UserSection();
+  const userSection = UserSection(user);
 
   sidebarContainer.append(
     createProjectButton,

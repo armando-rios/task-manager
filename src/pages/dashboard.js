@@ -30,7 +30,7 @@ export default async function dashboard() {
 
   const header = Header(user);
 
-  const sidebar = Sidebar();
+  const sidebar = Sidebar(user);
 
   main.append(sidebar, tasksSection);
   container.append(header, main);
