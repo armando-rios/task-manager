@@ -1,6 +1,9 @@
 import { apiRequest } from './api.js';
 import { ENDPOINTS } from '../utils/constants.js';
 
+let cachedUser = null;
+let authVerified = false;
+
 /**
  * Login user with email and password
  * @param {string} email - User email
@@ -13,6 +16,9 @@ export async function login(email, password) {
     credentials: 'include', // Important: send cookies
     body: JSON.stringify({ email, password }),
   });
+
+  cachedUser = data.user;
+  authVerified = true;
 
   return data;
 }
@@ -38,6 +44,8 @@ export async function register(name, email, password) {
  * Logout user
  */
 export async function logout() {
+  cachedUser = null;
+  authVerified = false;
   await apiRequest(ENDPOINTS.AUTH.LOGOUT, {
     method: 'POST',
     credentials: 'include',
@@ -49,12 +57,20 @@ export async function logout() {
  * @returns {Promise<boolean>} True if user is authenticated
  */
 export async function checkAuth() {
+  if (authVerified && cachedUser === null) {
+    return false;
+  }
+
   try {
     const data = await apiRequest(ENDPOINTS.AUTH.ME, {
       credentials: 'include',
     });
-    return !!data.user;
+    cachedUser = data.user || null;
+    authVerified = true;
+    return !!cachedUser;
   } catch {
+    cachedUser = null;
+    authVerified = true;
     return false;
   }
 }
@@ -64,12 +80,18 @@ export async function checkAuth() {
  * @returns {Promise<Object|null>} User data or null
  */
 export async function getCurrentUser() {
+  if (cachedUser !== null) {
+    return cachedUser;
+  }
+
   try {
     const data = await apiRequest(ENDPOINTS.AUTH.ME, {
       credentials: 'include',
     });
-    return data.user;
+    cachedUser = data.user;
+    return cachedUser;
   } catch {
+    cachedUser = null;
     return null;
   }
 }
