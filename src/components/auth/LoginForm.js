@@ -31,7 +31,8 @@ export function LoginForm(onSubmit) {
     name: 'password',
   });
 
-  // Submit button
+  let isLoading = false;
+
   const submitButton = Button({
     text: 'Login',
     type: 'submit',
@@ -42,6 +43,14 @@ export function LoginForm(onSubmit) {
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
+    if (isLoading) return;
+
+    isLoading = true;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Logging in...';
+    submitButton.style.opacity = '0.5';
+    submitButton.style.cursor = 'not-allowed';
+
     // ✅ Usar FormData para extraer valores por name
     const formData = new FormData(form);
     const credentials = {
@@ -49,8 +58,16 @@ export function LoginForm(onSubmit) {
       password: formData.get('password'),
     };
 
-    if (onSubmit) {
-      await onSubmit(credentials);
+    try {
+      if (onSubmit) {
+        await onSubmit(credentials);
+      }
+    } finally {
+      isLoading = false;
+      submitButton.disabled = false;
+      submitButton.textContent = 'Login';
+      submitButton.style.opacity = '1';
+      submitButton.style.cursor = 'pointer';
     }
   });
 

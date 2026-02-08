@@ -40,6 +40,8 @@ export function RegisterForm(onSubmit) {
     name: 'password',
   });
 
+  let isLoading = false;
+
   // Submit button
   const submitButton = Button({
     text: 'Register',
@@ -51,6 +53,14 @@ export function RegisterForm(onSubmit) {
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
+    if (isLoading) return;
+
+    isLoading = true;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Registering...';
+    submitButton.style.opacity = '0.5';
+    submitButton.style.cursor = 'not-allowed';
+
     // ✅ Usar FormData
     const formData = new FormData(form);
     const userData = {
@@ -59,8 +69,16 @@ export function RegisterForm(onSubmit) {
       password: formData.get('password'),
     };
 
-    if (onSubmit) {
-      await onSubmit(userData);
+    try {
+      if (onSubmit) {
+        await onSubmit(userData);
+      }
+    } finally {
+      isLoading = false;
+      submitButton.disabled = false;
+      submitButton.textContent = 'Register';
+      submitButton.style.opacity = '1';
+      submitButton.style.cursor = 'pointer';
     }
   });
 
