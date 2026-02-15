@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "server",
+  output: "static",
   adapter: vercel(),
   integrations: [react()],
 
@@ -15,4 +15,3 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 });
-
