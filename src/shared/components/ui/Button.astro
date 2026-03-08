@@ -1,0 +1,217 @@
+---
+/**
+ * Button Component with link support
+ * Versatile button with variants, sizes, and synthwave styling
+ *
+ * @example
+ * <Button variant="primary" size="md" href="/dashboard">Go to Dashboard</Button>
+ * <Button variant="secondary" size="lg">Click Me</Button>
+ */
+import type { HTMLAttributes } from "astro/types";
+
+interface Props {
+  id: string;
+  /** Button variant: primary, secondary, ghost, danger */
+  variant?: "primary" | "secondary" | "ghost" | "danger";
+  /** Button size: sm, md, lg */
+  size?: "sm" | "md" | "lg";
+  /** Show loading spinner */
+  loading?: boolean;
+  /** Disable button */
+  disabled?: boolean;
+  /** Icon component or slot to render before text */
+  icon?: any;
+  /** Icon position: left or right */
+  iconPosition?: "left" | "right";
+  /** Additional CSS classes */
+  class?: string;
+  /** HTML button type */
+  type?: "button" | "submit" | "reset";
+  /** Make button full width */
+  fullWidth?: boolean;
+  /** URL for link behavior - renders as anchor tag */
+  href?: string;
+}
+
+const {
+  id,
+  variant = "primary",
+  size = "md",
+  loading = false,
+  disabled = false,
+  icon,
+  iconPosition = "left",
+  class: className = "",
+  type = "button",
+  fullWidth = false,
+  href,
+} = Astro.props;
+
+const sizeClasses = {
+  sm: "px-3 py-1.5 text-xs min-h-[36px]",
+  md: "px-4 py-2 text-sm min-h-[44px]",
+  lg: "px-6 py-3 text-base min-h-[52px]",
+};
+
+const variantClasses = {
+  primary: `
+    bg-theme-primary text-theme-crust font-semibold border border-theme-primary
+    hover:glow-primary hover:scale-[1.02] active:scale-[0.98]
+  `,
+  secondary: `
+    bg-transparent text-theme-text border border-theme-surface-2
+    hover:border-theme-primary hover:glow-hover active:scale-[0.98]
+  `,
+  ghost: `
+    bg-transparent text-theme-text border border-transparent
+    hover:bg-theme-surface-0 active:scale-[0.98]
+  `,
+  danger: `
+    bg-theme-error/90 text-theme-crust font-semibold border border-theme-error
+    hover:glow-error hover:scale-[1.02] active:scale-[0.98]
+  `,
+};
+
+const baseClasses = `
+  inline-flex items-center justify-center gap-2
+  rounded-lg font-medium transition-all duration-200
+  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-primary focus-visible:ring-offset-2 focus-visible:ring-offset-theme-base
+  disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+  select-none
+`;
+
+const buttonClasses = [
+  baseClasses,
+  sizeClasses[size],
+  variantClasses[variant],
+  fullWidth ? "w-full" : "",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+
+const Tag = href ? "a" : "button";
+---
+
+{
+  href ? (
+    <a
+      href={disabled ? undefined : href}
+      class={buttonClasses}
+      aria-disabled={disabled}
+      {...(disabled && { tabindex: -1 })}
+      id={id}
+    >
+      {loading && (
+        <svg
+          class="animate-spin h-4 w-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          />
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+      )}
+
+      {!loading && icon && iconPosition === "left" && (
+        <span class="button-icon">{icon}</span>
+      )}
+
+      <slot />
+
+      {!loading && icon && iconPosition === "right" && (
+        <span class="button-icon">{icon}</span>
+      )}
+    </a>
+  ) : (
+    <button
+      type={type}
+      class={buttonClasses}
+      disabled={disabled || loading}
+      aria-busy={loading}
+      id={id}
+    >
+      {loading && (
+        <svg
+          class="animate-spin h-4 w-4"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          />
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+      )}
+
+      {!loading && icon && iconPosition === "left" && (
+        <span class="button-icon">{icon}</span>
+      )}
+
+      <slot />
+
+      {!loading && icon && iconPosition === "right" && (
+        <span class="button-icon">{icon}</span>
+      )}
+    </button>
+  )
+}
+
+<style>
+  .button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button-icon :global(svg) {
+    width: 1em;
+    height: 1em;
+  }
+
+  /* Glow pulse animation for primary buttons */
+  :global(.btn-glow) .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Touch-friendly active state */
+  @media (hover: none) {
+    button:active:not(:disabled),
+    a:active:not([aria-disabled="true"]) {
+      transform: scale(0.98);
+    }
+  }
+</style>

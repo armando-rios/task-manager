@@ -1,0 +1,83 @@
+---
+interface Props {
+  username: string;
+  avatarUrl: string;
+  status?: "online" | "offline" | "away";
+}
+
+const { username, avatarUrl, status = "offline" } = Astro.props;
+
+const statusColors = {
+  online: "bg-theme-success",
+  offline: "bg-theme-surface-2",
+  away: "bg-theme-warning",
+};
+
+const statusLabels = {
+  online: "Online",
+  offline: "Offline",
+  away: "Away",
+};
+---
+
+<div
+  class="flex items-center gap-3 p-3 rounded-xl glass-panel hover:border-theme-primary/20 transition-all duration-300 group"
+>
+  <!-- Avatar with status indicator -->
+  <div class="relative shrink-0">
+    <img
+      src={avatarUrl}
+      alt={username}
+      class={`
+        w-10 h-10 rounded-lg ring-2 transition-all duration-300
+        ${
+          status === "online"
+            ? "ring-theme-primary/50 shadow-[0_0_12px_rgba(var(--color-theme-primary),0.3)]"
+            : "ring-theme-surface-2 group-hover:ring-theme-surface-3"
+        }
+      `}
+    />
+
+    {/* Status indicator */}
+    <span
+      class={`
+        absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full ring-2 ring-theme-base
+        ${statusColors[status]}
+        ${status === "online" ? "animate-pulse shadow-[0_0_8px_rgba(var(--color-theme-success),0.5)]" : ""}
+      `}></span>
+  </div>
+
+  <!-- User info -->
+  <div class="flex-1 min-w-0">
+    <p class="text-sm font-medium text-theme-text truncate">{username}</p>
+    <p
+      class={`text-xs ${
+        status === "online"
+          ? "text-theme-success"
+          : status === "away"
+            ? "text-theme-warning"
+            : "text-theme-muted"
+      }`}
+    >
+      {statusLabels[status]}
+    </p>
+  </div>
+
+  <!-- Glow accent on hover -->
+  <div
+    class="w-1 h-8 rounded-full bg-gradient-to-b from-theme-primary/0 via-theme-primary/50 to-theme-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+  >
+  </div>
+</div>
+
+<style>
+  img {
+    image-rendering: pixelated;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    span {
+      animation: none;
+    }
+  }
+</style>
