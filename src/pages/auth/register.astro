@@ -1,0 +1,113 @@
+---
+import BaseLayout from '@shared/components/layouts/BaseLayout.astro';
+import InteractiveGrid from '@features/landing/components/InteractiveGrid.astro';
+---
+
+<BaseLayout title='Register | Task Manager'>
+  <InteractiveGrid />
+
+  <main class='h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-transparent font-mono text-theme-text-0'>
+    <!-- Auth Frame - Glass Style -->
+    <div class='relative w-full max-w-md bg-theme-surface-0/80 backdrop-blur-xl border border-theme-surface-2/40 rounded-2xl shadow-2xl overflow-hidden z-10'>
+      <!-- Glass Header -->
+      <div class='bg-theme-surface-0/40 border-b border-theme-surface-2/30 px-6 py-4 flex justify-between items-center'>
+        <a href='/' class='flex items-center gap-3 text-theme-primary group hover:opacity-80 transition-opacity'>
+          <div class='w-6 h-6 bg-theme-primary rounded-lg flex items-center justify-center font-black text-theme-surface-0 text-[10px] group-hover:rotate-12 transition-transform shadow-[0_0_15px_rgba(var(--color-theme-primary),0.4)]'>TM</div>
+          <span class='text-[10px] font-black uppercase tracking-[0.2em]'>User_Registration_v1</span>
+        </a>
+        <a href='/' class='text-[8px] font-black text-theme-text-1 opacity-40 hover:opacity-100 hover:text-theme-primary uppercase tracking-widest transition-all'>[exit_to_home]</a>
+      </div>
+
+      <div class='p-8 space-y-8'>
+        <div class='space-y-2 border-l-2 border-theme-primary pl-4'>
+          <h1 class='text-xl font-black uppercase tracking-tighter italic'>Create_Identity</h1>
+          <p class='text-[10px] text-theme-text-1 font-bold uppercase tracking-[0.2em] opacity-40 italic'>Allocate new user slot in database</p>
+        </div>
+
+        <form id='register-form' class='space-y-6'>
+          <div class='space-y-5'>
+            <div class='space-y-2 group'>
+              <label class='text-[9px] font-black text-theme-text-1 uppercase tracking-widest ml-1 opacity-40 group-focus-within:opacity-100 group-focus-within:text-theme-primary transition-all italic'>./set_email:</label>
+              <input type='email' name='email' required placeholder='user@domain.com' class='w-full bg-theme-surface-0/50 border border-theme-surface-2/40 px-4 py-3 rounded-lg text-xs text-theme-text-0 outline-none focus:border-theme-primary/50 transition-all font-bold placeholder:opacity-20' />
+            </div>
+
+            <div class='space-y-2 group relative'>
+              <label class='text-[9px] font-black text-theme-text-1 uppercase tracking-widest ml-1 opacity-40 group-focus-within:opacity-100 group-focus-within:text-theme-primary transition-all italic'>./set_password:</label>
+              <div class='relative'>
+                <input id='password-field' type='password' name='password' required placeholder='min. 6 characters' class='w-full bg-theme-surface-0/50 border border-theme-surface-2/40 px-4 py-3 rounded-lg text-xs text-theme-text-0 outline-none focus:border-theme-primary/50 transition-all font-bold placeholder:opacity-20 pr-12' />
+                <button type='button' id='toggle-password' class='absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-theme-text-1 opacity-40 hover:opacity-100 hover:text-theme-primary uppercase transition-all'>[show]</button>
+              </div>
+            </div>
+          </div>
+
+          <button type='submit' id='submit-btn' class='w-full py-4 bg-theme-surface-1 text-theme-primary border-2 border-theme-primary/30 font-black uppercase tracking-[0.3em] text-[11px] rounded-xl shadow-lg shadow-theme-primary/10 hover:bg-theme-primary/10 hover:border-theme-primary transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed'>initialize_account()</button>
+        </form>
+
+        <div class='pt-6 border-t border-theme-surface-2/20 flex flex-col gap-4 text-center'>
+          <a href='/auth/login' class='text-[10px] font-black text-theme-text-0 uppercase tracking-[0.3em] hover:underline decoration-theme-text-0/30 underline-offset-4'>[return_to_login]</a>
+        </div>
+      </div>
+
+      <div class='bg-theme-surface-0/30 px-6 py-2 border-t border-theme-surface-2/20 flex justify-end'>
+        <span class='text-[8px] font-black text-theme-text-1 opacity-20 uppercase tracking-[0.5em]'>Auth_Registry_Sector_02</span>
+      </div>
+    </div>
+
+    <div class='absolute left-0 right-0 h-px bg-theme-primary/5 animate-scan z-0 pointer-events-none opacity-20'></div>
+  </main>
+
+  <script>
+    import { getSupabaseBrowserClient } from "@shared/lib/supabase";
+
+    const supabase = getSupabaseBrowserClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        window.location.href = "/dashboard";
+      }
+    });
+  </script>
+
+  <script>
+    import { actions } from 'astro:actions';
+    import { navigate } from 'astro:transitions/client';
+    import { showToast } from '@shared/lib/toast';
+
+    const form = document.getElementById('register-form') as HTMLFormElement;
+    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const passwordInput = document.getElementById('password-field') as HTMLInputElement;
+    const toggleBtn = document.getElementById('toggle-password');
+
+    toggleBtn?.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      toggleBtn.textContent = isPassword ? '[hide]' : '[show]';
+    });
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'allocating_slot...';
+
+      const formData = new FormData(form);
+      const { data, error } = await actions.auth.register(formData);
+
+      if (error) {
+        showToast.error(error.message);
+        btn.disabled = false;
+        btn.textContent = 'initialize_account()';
+        return;
+      }
+
+      if (data?.verificationRequired) {
+        navigate(`/auth/verify-email?email=${data.email}`);
+      } else {
+        navigate('/dashboard');
+      }
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  @keyframes scan { 0% { top: 0%; opacity: 0; } 5% { opacity: 0.1; } 95% { opacity: 0.1; } 100% { top: 100%; opacity: 0; } }
+  .animate-scan { animation: scan 10s linear infinite; }
+</style>

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '@shared/components/layouts/BaseLayout.astro';
+import InteractiveGrid from '@features/landing/components/InteractiveGrid.astro';
+---
+
+<BaseLayout title='Verify Email | Task Manager'>
+  <InteractiveGrid />
+
+  <main class='h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-transparent font-mono'>
+    <!-- Frame - Glass Style -->
+    <div class='relative w-full max-w-md bg-theme-surface-0/80 backdrop-blur-xl border border-theme-surface-2/40 rounded-2xl shadow-2xl overflow-hidden z-10 text-theme-text-0'>
+      <!-- Glass Header -->
+      <div class='bg-theme-surface-0/40 border-b border-theme-surface-2/30 px-6 py-4 flex justify-between items-center'>
+        <a href='/' class='flex items-center gap-3 text-theme-primary group hover:opacity-80 transition-opacity'>
+          <div class='w-6 h-6 bg-theme-primary rounded-lg flex items-center justify-center font-black text-theme-surface-0 text-[10px] group-hover:rotate-12 transition-transform shadow-[0_0_15px_rgba(var(--color-theme-primary),0.4)]'>TM</div>
+          <span class='text-[10px] font-black uppercase tracking-[0.2em]'>Verification_Module</span>
+        </a>
+        <a href='/' class='text-[8px] font-black text-theme-text-1 opacity-40 hover:opacity-100 hover:text-theme-primary uppercase tracking-widest transition-all'>[abort_and_exit]</a>
+      </div>
+
+      <div class='p-10 space-y-10'>
+        <div class='space-y-4 border-l-2 border-theme-primary pl-6'>
+          <div class='flex items-center gap-3 text-theme-primary mb-2'>
+            <span class='w-2 h-2 rounded-full bg-theme-primary animate-ping'></span>
+            <span class='text-[10px] font-black uppercase tracking-widest italic'>Awaiting_Confirmation</span>
+          </div>
+          <h1 class='text-3xl font-black uppercase tracking-tighter italic leading-none'>Check_Your_Inbox</h1>
+          <p class='text-xs text-theme-text-1 font-bold leading-relaxed opacity-60'>
+            A secure activation link has been transmitted to: <br/>
+            <span class='text-theme-text-0 font-black' id="user-email">your_email_address</span>
+          </p>
+        </div>
+
+        <div class='bg-theme-surface-0/50 border border-theme-surface-2/30 p-6 rounded-xl space-y-4 shadow-lg'>
+          <p class='text-[10px] text-theme-text-1 font-black uppercase tracking-widest opacity-40'>System_Instructions:</p>
+          <ul class='space-y-3 text-[10px] font-bold uppercase tracking-tighter text-theme-text-1 opacity-60 italic'>
+            <li class='flex items-start gap-2'>
+              <span class='text-theme-primary opacity-100'>01.</span> Open your email client.
+            </li>
+            <li class='flex items-start gap-2'>
+              <span class='text-theme-primary opacity-100'>02.</span> Execute the activation command via link.
+            </li>
+            <li class='flex items-start gap-2'>
+              <span class='text-theme-primary opacity-100'>03.</span> Return to base to initialize session.
+            </li>
+          </ul>
+        </div>
+
+        <div class='pt-6 border-t border-theme-surface-2/20 text-center'>
+          <a href='/auth/login' class='text-[10px] font-black text-theme-primary uppercase tracking-[0.3em] hover:underline decoration-theme-primary/30 underline-offset-4'>[return_to_login_gate]</a>
+        </div>
+      </div>
+
+      <div class='bg-theme-surface-0/30 px-6 py-2 border-t border-theme-surface-2/20 flex justify-end'>
+        <span class='text-[8px] font-black text-theme-text-1 opacity-20 uppercase tracking-[0.5em]'>Identity_Security_Service</span>
+      </div>
+    </div>
+
+    <div class='absolute left-0 right-0 h-px bg-theme-primary/5 animate-scan z-0 pointer-events-none opacity-20'></div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+    if (email) {
+      const el = document.getElementById("user-email");
+      if (el) el.textContent = email;
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  @keyframes scan { 0% { top: 0%; opacity: 0; } 100% { top: 100%; opacity: 0; } }
+  .animate-scan { animation: scan 10s linear infinite; }
+</style>
