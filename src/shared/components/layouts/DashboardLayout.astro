@@ -1,0 +1,92 @@
+---
+// src/shared/components/layouts/DashboardLayout.astro
+import BaseLayout from "./BaseLayout.astro";
+import Header from "./Header.astro";
+import Sidebar from "../ui/Sidebar.astro";
+
+interface Props {
+  title: string;
+  currentPath?: string;
+}
+
+const { title, currentPath = "~/projects" } = Astro.props;
+const { user } = Astro.locals;
+---
+
+<BaseLayout title={title}>
+  <div class="h-dvh max-h-dvh flex bg-theme-base">
+    <Sidebar user={user}>
+      <Fragment slot="sidebar-projects">
+        <slot name="sidebar-projects" />
+      </Fragment>
+    </Sidebar>
+    <main class="h-dvh flex-1 min-w-0">
+      <Header user={user} currentPath={currentPath} />
+      <!-- Page Content with Grid Background -->
+      <div class="relative h-[calc(100dvh-3.5rem)] flex flex-col overflow-hidden">
+        <!-- Grid Pattern Background -->
+        <div class="absolute inset-0 grid-bg opacity-30 pointer-events-none">
+        </div>
+
+        <!-- Content Area -->
+        <div class="relative z-10 p-4 lg:p-8 h-full flex flex-col overflow-hidden">
+          <slot />
+        </div>
+      </div>
+    </main>
+  </div>
+</BaseLayout>
+
+<script>
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+  import { initBroadcastSync } from "@shared/lib/sync/broadcastSync";
+
+  const menu = document.getElementById("mobile-menu-toggle");
+  const close = document.getElementById("mobile-menu-close");
+  const sidebar = document.getElementById("sidebar");
+  const sidebarOut = document.getElementById("sidebar-out");
+  const logoutForm = document.getElementById("logout-form") as HTMLFormElement;
+
+  // Initialize cross-tab sync
+  initBroadcastSync();
+
+  const showSidebar = () => {
+    sidebar?.classList.remove("hidden");
+    sidebar?.classList.add("flex", "fixed", "z-50");
+    sidebarOut?.classList.remove("hidden");
+  };
+
+  const hideSidebar = () => {
+    sidebar?.classList.add("hidden");
+    sidebar?.classList.remove("flex", "fixed", "z-50");
+    sidebarOut?.classList.add("hidden");
+  };
+
+  menu?.addEventListener("click", showSidebar);
+  close?.addEventListener("click", hideSidebar);
+  sidebarOut?.addEventListener("click", hideSidebar);
+
+  // Logout Interception
+  logoutForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await actions.auth.logout();
+    navigate("/auth/login");
+  });
+</script>
+
+<style is:global>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-theme-surface-3);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-theme-primary);
+  }
+</style>

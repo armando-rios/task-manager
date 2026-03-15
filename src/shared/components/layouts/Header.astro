@@ -1,0 +1,187 @@
+---
+const { currentPath = "~/projects", user } = Astro.props;
+
+// Parse the currentPath into segments
+// Format: ~/projects or ~/projects/ProjectName or ~/settings.conf
+const pathSegments = currentPath.replace(/^~\/?/, '').split('/').filter(Boolean);
+
+// Build breadcrumb items
+const breadcrumbs: { label: string; href: string }[] = [];
+
+if (pathSegments.length > 0) {
+  // First segment is usually 'projects' or 'settings.conf'
+  const firstSegment = pathSegments[0];
+  
+  if (firstSegment === 'projects') {
+    breadcrumbs.push({ label: 'projects', href: '/dashboard' });
+    
+    // If there's a second segment, it's the project name
+    if (pathSegments.length > 1) {
+      // Project name is not clickable (current page)
+      breadcrumbs.push({ label: pathSegments[1], href: '' });
+    }
+  } else if (firstSegment === 'settings.conf') {
+    breadcrumbs.push({ label: 'settings', href: '/dashboard/settings' });
+  }
+}
+---
+
+<header
+  class="hidden lg:flex items-center justify-between p-3 border-b border-theme-primary/10 bg-theme-mantle/30"
+>
+  <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 text-theme-subtext font-mono text-sm">
+      <a
+        href="/dashboard"
+        class="text-theme-primary font-black hover:opacity-80 transition-opacity"
+        title="Home"
+      >
+        ~
+      </a>
+
+      <span 
+        id="breadcrumb-path" 
+        class="flex items-center"
+        data-breadcrumbs={JSON.stringify(breadcrumbs)}
+      >
+        {breadcrumbs.map((crumb, index) => (
+          <>
+            <span class="text-theme-overlay/50">/</span>
+            {crumb.href ? (
+              <a
+                href={crumb.href}
+                class="hover:text-theme-primary transition-colors duration-200 hover:drop-shadow-[0_0_8px_rgba(var(--color-theme-primary),0.5)]"
+              >
+                {crumb.label}
+              </a>
+            ) : (
+              <span class="text-theme-text font-medium">{crumb.label}</span>
+            )}
+          </>
+        ))}
+      </span>
+
+      <span
+        class="ml-1 w-0.5 h-4 bg-theme-primary animate-pulse shadow-[0_0_8px_rgba(var(--color-theme-primary),0.8)]"
+      ></span>
+    </div>
+  </div>
+
+  <script>
+    // Typing animation for breadcrumb
+    document.addEventListener('DOMContentLoaded', () => {
+      const breadcrumbPath = document.getElementById('breadcrumb-path');
+      if (!breadcrumbPath) return;
+      
+      const breadcrumbs = JSON.parse(breadcrumbPath.dataset.breadcrumbs || '[]');
+      if (breadcrumbs.length === 0) return;
+      
+      // Build full text
+      let fullText = '';
+      breadcrumbs.forEach((crumb: { label: string }) => {
+        fullText += '/' + crumb.label;
+      });
+      
+      // Store original HTML
+      const originalHTML = breadcrumbPath.innerHTML;
+      
+      // Clear and prepare for animation
+      breadcrumbPath.innerHTML = '<span class="typing-text"></span>';
+      const typingText = breadcrumbPath.querySelector('.typing-text') as HTMLElement;
+      
+      // Type animation
+      let charIndex = 0;
+      const typeSpeed = 50;
+      
+      const typeChar = () => {
+        if (charIndex < fullText.length) {
+          typingText.textContent += fullText[charIndex];
+          charIndex++;
+          setTimeout(typeChar, typeSpeed);
+        } else {
+          // Animation complete, restore original HTML
+          setTimeout(() => {
+            breadcrumbPath.innerHTML = originalHTML;
+          }, 100);
+        }
+      };
+      
+      // Start typing after a brief delay
+      setTimeout(typeChar, 200);
+    });
+  </script>
+
+  <div class="flex items-center gap-3">
+    <div
+      class="flex items-center gap-2 px-3 py-1.5 bg-theme-surface-0/50 border border-theme-primary/10 rounded-full"
+    >
+      <span
+        class="w-1.5 h-1.5 rounded-full bg-theme-success animate-pulse shadow-[0_0_6px_rgba(var(--color-theme-success),0.25)]"
+      ></span>
+      <span
+        class="text-[10px] font-black uppercase tracking-widest text-theme-subtext"
+        >Online</span
+      >
+    </div>
+    <div
+      class="flex items-center gap-2 px-3 py-1.5 bg-theme-surface-0/30 border border-theme-surface-1/30 rounded-full"
+    >
+      <span
+        class="text-[10px] text-theme-text font-black uppercase tracking-[0.2em] italic"
+        >{user?.email?.split("@")[0]}</span
+      >
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Header -->
+<header
+  class="lg:hidden top-0 inset-x-0 z-20 glass-panel border-b border-theme-primary/10"
+>
+  <div class="flex items-center justify-between h-14 px-3">
+    <!-- Hamburger Menu Button -->
+    <button
+      id="mobile-menu-toggle"
+      class="p-2 rounded-lg hover:bg-theme-surface-0 transition-colors"
+      aria-label="Open menu"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 text-theme-text"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+
+    <!-- Logo -->
+    <a href="/dashboard" class="flex items-center gap-2 group">
+      <div
+        class="w-7 h-7 bg-theme-primary rounded-lg flex items-center justify-center font-black text-theme-base text-xs shadow-[0_0_10px_rgba(var(--color-theme-primary),0.25)] transition-transform group-hover:rotate-12"
+      >
+        TM
+      </div>
+      <span
+        class="text-xs font-black uppercase tracking-wider text-theme-text hidden sm:block"
+        >Task Manager</span
+      >
+    </a>
+
+    <!-- User Avatar Mobile -->
+    <div
+      class="w-7 h-7 rounded-lg border border-theme-primary/20 overflow-hidden"
+    >
+      <img
+        src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${user?.id}`}
+        alt="User"
+        class="w-full h-full"
+      />
+    </div>
+  </div>
+</header>

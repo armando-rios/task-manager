@@ -1,0 +1,17 @@
+---
+const { user } = Astro.locals;
+---
+
+<!-- Header Section -->
+<header class="shrink-0">
+  <h1
+    class="text-xl md:text-2xl font-bold text-theme-text glow-text-primary tracking-tight"
+  >
+    Dashboard
+  </h1>
+  <p class="text-theme-subtext mt-1 text-xs md:text-sm">
+    Welcome back, <span class="text-theme-primary font-semibold"
+      >{user?.email?.split("@")[0]}</span
+    >
+  </p>
+</header>
