@@ -1,0 +1,203 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Surface hierarchy */
+  --color-theme-crust: var(--color-theme-crust);
+  --color-theme-mantle: var(--color-theme-mantle);
+  --color-theme-base: var(--color-theme-base);
+  --color-theme-surface-0: var(--color-theme-surface-0);
+  --color-theme-surface-1: var(--color-theme-surface-1);
+  --color-theme-surface-2: var(--color-theme-surface-2);
+  --color-theme-surface-3: var(--color-theme-surface-3);
+
+  /* Text hierarchy */
+  --color-theme-text: var(--color-theme-text);
+  --color-theme-subtext: var(--color-theme-subtext);
+  --color-theme-overlay: var(--color-theme-overlay);
+  --color-theme-muted: var(--color-theme-muted);
+
+  /* Primary accents */
+  --color-theme-primary: var(--color-theme-primary);
+  --color-theme-secondary: var(--color-theme-secondary);
+  --color-theme-tertiary: var(--color-theme-tertiary);
+
+  /* Status colors */
+  --color-theme-success: var(--color-theme-success);
+  --color-theme-warning: var(--color-theme-warning);
+  --color-theme-error: var(--color-theme-error);
+  --color-theme-info: var(--color-theme-info);
+
+  /* Priority colors */
+  --color-theme-priority-low: var(--color-theme-priority-low);
+  --color-theme-priority-medium: var(--color-theme-priority-medium);
+  --color-theme-priority-high: var(--color-theme-priority-high);
+
+  /* Additional accent colors */
+  --color-theme-rosewater: var(--color-theme-rosewater);
+  --color-theme-flamingo: var(--color-theme-flamingo);
+  --color-theme-mauve: var(--color-theme-mauve);
+  --color-theme-maroon: var(--color-theme-maroon);
+  --color-theme-peach: var(--color-theme-peach);
+  --color-theme-yellow: var(--color-theme-yellow);
+  --color-theme-green: var(--color-theme-green);
+  --color-theme-teal: var(--color-theme-teal);
+  --color-theme-sky: var(--color-theme-sky);
+  --color-theme-sapphire: var(--color-theme-sapphire);
+  --color-theme-blue: var(--color-theme-blue);
+  --color-theme-lavender: var(--color-theme-lavender);
+
+  /* Glow colors */
+  --color-glow-primary: var(--color-glow-primary);
+  --color-glow-secondary: var(--color-glow-secondary);
+  --color-glow-tertiary: var(--color-glow-tertiary);
+  --color-glow-success: var(--color-glow-success);
+  --color-glow-warning: var(--color-glow-warning);
+  --color-glow-error: var(--color-glow-error);
+  --color-glow-info: var(--color-glow-info);
+  --color-glow-muted: var(--color-glow-muted);
+
+  /* Shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-glow: var(--shadow-glow);
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}
+
+:root,
+.catppuccin {
+  /* Surface hierarchy */
+  --color-theme-crust: #11111b;
+  --color-theme-mantle: #181825;
+  --color-theme-base: #1e1e2e;
+  --color-theme-surface-0: #313244;
+  --color-theme-surface-1: #45475a;
+  --color-theme-surface-2: #585b70;
+  --color-theme-surface-3: #6c7086;
+
+  /* Text hierarchy */
+  --color-theme-text: #cdd6f4;
+  --color-theme-subtext: #a6adc8;
+  --color-theme-overlay: #7f849c;
+  --color-theme-muted: #6c7086;
+
+  /* Primary accents - Red primary */
+  --color-theme-primary: #f38ba8;
+  --color-theme-secondary: #f5c2e7;
+  --color-theme-tertiary: #eba0ac;
+
+  /* Status colors */
+  --color-theme-success: #a6e3a1;
+  --color-theme-warning: #f9e2af;
+  --color-theme-error: #f38ba8;
+  --color-theme-info: #89b4fa;
+
+  /* Priority colors */
+  --color-theme-priority-low: #a6e3a1;
+  --color-theme-priority-medium: #f9e2af;
+  --color-theme-priority-high: #f38ba8;
+
+  /* Additional accent colors */
+  --color-theme-rosewater: #f5e0dc;
+  --color-theme-flamingo: #f2cdcd;
+  --color-theme-mauve: #cba6f7;
+  --color-theme-maroon: #eba0ac;
+  --color-theme-peach: #fab387;
+  --color-theme-yellow: #f9e2af;
+  --color-theme-green: #a6e3a1;
+  --color-theme-teal: #94e2d5;
+  --color-theme-sky: #89dceb;
+  --color-theme-sapphire: #74c7ec;
+  --color-theme-blue: #89b4fa;
+  --color-theme-lavender: #b4befe;
+
+  /* Glow colors (rgba for opacity control) - Subtle */
+  --color-glow-primary: rgba(243, 139, 168, 0.25);
+  --color-glow-secondary: rgba(245, 194, 231, 0.25);
+  --color-glow-tertiary: rgba(235, 160, 172, 0.25);
+  --color-glow-success: rgba(166, 227, 161, 0.25);
+  --color-glow-warning: rgba(249, 226, 175, 0.25);
+  --color-glow-error: rgba(243, 139, 168, 0.25);
+  --color-glow-info: rgba(137, 180, 250, 0.25);
+  --color-glow-muted: rgba(108, 112, 134, 0.15);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(30, 30, 46, 0.7);
+  --glass-bg-hover: rgba(49, 50, 68, 0.8);
+  --glass-border: rgba(205, 214, 244, 0.1);
+  --glass-border-hover: rgba(205, 214, 244, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-blur: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--color-glow-primary);
+}
+
+.kanagawa {
+  --color-theme-surface-0: #0d0d14;
+  --color-theme-surface-1: #1f1f28;
+  --color-theme-surface-2: #2a2a37;
+  --color-theme-surface-3: #363646;
+  --color-theme-primary: #7aa89f;
+  --color-theme-priority-low: #938aa9;
+  --color-theme-priority-medium: #e6c384;
+  --color-theme-priority-high: #e46876;
+  --color-theme-text-0: #dcd7ba;
+  --color-theme-text-1: #a9a1cf;
+  --color-theme-text-vibrant: #ffffff;
+}
+
+.kanagawa-dragon {
+  --color-theme-surface-0: #0d0c0c;
+  --color-theme-surface-1: #181616;
+  --color-theme-surface-2: #282727;
+  --color-theme-surface-3: #393836;
+  --color-theme-primary: #c4746e;
+  --color-theme-priority-low: #87a987;
+  --color-theme-priority-medium: #c4b28a;
+  --color-theme-priority-high: #e46876;
+  --color-theme-text-0: #c5c9c5;
+  --color-theme-text-1: #a6a69c;
+  --color-theme-text-vibrant: #ffffff;
+}
+
+.tokyo-night {
+  --color-theme-surface-0: #0a0a0f;
+  --color-theme-surface-1: #1a1b26;
+  --color-theme-surface-2: #24283b;
+  --color-theme-surface-3: #414868;
+  --color-theme-primary: #7dcfff;
+  --color-theme-priority-low: #9ece6a;
+  --color-theme-priority-medium: #ff9e64;
+  --color-theme-priority-high: #f7768e;
+  --color-theme-text-0: #c0caf5;
+  --color-theme-text-1: #9aa5ce;
+  --color-theme-text-vibrant: #ffffff;
+}
+
+.nord {
+  --color-theme-surface-0: #24292e;
+  --color-theme-surface-1: #2e3440;
+  --color-theme-surface-2: #3b4252;
+  --color-theme-surface-3: #4c566a;
+  --color-theme-primary: #88c0d0;
+  --color-theme-priority-low: #a3be8c;
+  --color-theme-priority-medium: #ebcb8b;
+  --color-theme-priority-high: #bf616a;
+  --color-theme-text-0: #eceff4;
+  --color-theme-text-1: #d8dee9;
+  --color-theme-text-vibrant: #ffffff;
+}
+
+@import "./base.css";
+@import "./toast.css";

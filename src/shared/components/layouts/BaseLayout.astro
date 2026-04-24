@@ -1,0 +1,39 @@
+---
+import "@/styles/global.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<html lang="es" class="catppuccin">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script is:inline>
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme && savedTheme !== "catppuccin") {
+        document.documentElement.className = savedTheme;
+      }
+    </script>
+  </head>
+  <body
+    class="bg-theme-surface-0 text-theme-text-0 antialiased overflow-hidden font-mono h-dvh max-h-dvh flex flex-col"
+  >
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  body {
+    font-family: "JetBrains Mono", monospace;
+  }
+</style>

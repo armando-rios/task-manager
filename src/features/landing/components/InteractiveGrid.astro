@@ -1,0 +1,131 @@
+<div class='absolute inset-0 pointer-events-none z-0' id='interactive-grid-container'>
+  <canvas id='interactive-grid-canvas' class='w-full h-full' style='pointer-events: none;'></canvas>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('interactive-grid-container');
+    const canvas = document.getElementById('interactive-grid-canvas') as HTMLCanvasElement;
+    
+    if (!container || !canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    let mouseX = 0;
+    let mouseY = 0;
+    let points: { x: number; y: number; originalX: number; originalY: number; vx: number; vy: number }[] = [];
+    const spacing = 30;
+    let cols = 0;
+    let rows = 0;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      cols = Math.ceil(canvas.width / spacing) + 1;
+      rows = Math.ceil(canvas.height / spacing) + 1;
+      
+      points = [];
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          points.push({
+            x: i * spacing,
+            y: j * spacing,
+            originalX: i * spacing,
+            originalY: j * spacing,
+            vx: 0,
+            vy: 0
+          });
+        }
+      }
+    };
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    const animate = () => {
+      if (!ctx) return;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const forceRadius = 150;
+      const forceStrength = 0.8;
+      const returnStrength = 0.05;
+      const friction = 0.92;
+
+      points.forEach(p => {
+        const dx = p.x - mouseX;
+        const dy = p.y - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < forceRadius) {
+          const force = (1 - dist / forceRadius) * forceStrength;
+          const angle = Math.atan2(dy, dx);
+          p.vx += Math.cos(angle) * force;
+          p.vy += Math.sin(angle) * force;
+        }
+
+        p.vx += (p.originalX - p.x) * returnStrength;
+        p.vy += (p.originalY - p.y) * returnStrength;
+        p.vx *= friction;
+        p.vy *= friction;
+
+        p.x += p.vx;
+        p.y += p.vy;
+      });
+
+      ctx.strokeStyle = 'rgba(205, 214, 244, 0.15)';
+      ctx.lineWidth = 1;
+
+      for (let j = 0; j < rows; j++) {
+        ctx.beginPath();
+        for (let i = 0; i < cols; i++) {
+          const p = points[i * rows + j];
+          if (i === 0) {
+            ctx.moveTo(p.x, p.y);
+          } else {
+            ctx.lineTo(p.x, p.y);
+          }
+        }
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < cols; i++) {
+        ctx.beginPath();
+        for (let j = 0; j < rows; j++) {
+          const p = points[i * rows + j];
+          if (j === 0) {
+            ctx.moveTo(p.x, p.y);
+          } else {
+            ctx.lineTo(p.x, p.y);
+          }
+        }
+        ctx.stroke();
+      }
+
+      points.forEach(p => {
+        const dx = p.x - mouseX;
+        const dy = p.y - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if (dist < forceRadius) {
+          const alpha = (1 - dist / forceRadius) * 0.3;
+          ctx.fillStyle = `rgba(245, 194, 231, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+  });
+</script>

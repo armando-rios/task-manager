@@ -1,0 +1,58 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  active?: boolean;
+  prefix?: string;
+  badge?: string;
+}
+
+const { href, label, active = false, prefix = "./", badge } = Astro.props;
+---
+
+<li data-nav-link class="list-none">
+  <a
+    href={href}
+    class={`
+      group flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300
+      ${
+        active
+          ? "bg-theme-surface-0/70 text-theme-primary"
+          : "text-theme-subtext hover:text-theme-text hover:bg-theme-surface-0/50"
+      }
+    `}
+  >
+    {/* Prefix indicator */}
+    <span
+      class={`
+      text-[10px] font-black transition-colors duration-300 shrink-0
+      ${active ? "text-theme-primary" : "text-theme-primary/30 group-hover:text-theme-primary"}
+    `}
+    >
+      {prefix}
+    </span>
+
+    {/* Label */}
+    <span
+      class="truncate uppercase tracking-wider text-[10px] md:text-xs font-medium"
+    >
+      {label}
+    </span>
+
+    {/* Badge */}
+    {
+      badge && (
+        <span class="ml-auto badge badge-primary text-[10px]">{badge}</span>
+      )
+    }
+  </a>
+</li>
+
+<style>
+  /* Ensure minimum touch target on mobile */
+  @media (max-width: 1024px) {
+    a {
+      min-height: 44px;
+    }
+  }
+</style>

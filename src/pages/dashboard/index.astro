@@ -1,0 +1,112 @@
+---
+export const prerender = false;
+
+import DashboardLayout from "@shared/components/layouts/DashboardLayout.astro";
+import { SidebarProjects } from "@features/projects/components/SidebarProjects";
+import Header from "@/shared/components/dashboard/Header.astro";
+import { Stats } from "@shared/components/dashboard/Stats";
+import QuickActions from "@shared/components/dashboard/QuickActions.astro";
+import { ProjectSection } from "@shared/components/dashboard/ProjectSection";
+
+const { supabase } = Astro.locals;
+
+// Fetch Real Projects (SSR) - ORDENADOS CRONOLÓGICAMENTE
+const { data: projectsData, error } = await supabase
+  .from("projects")
+  .select(
+    `
+    *,
+    tasks:tasks(id, status)
+  `,
+  )
+  .order("created_at", { ascending: true });
+
+if (error) console.error("Error fetching projects:", error.message);
+
+const projects =
+  projectsData?.map((p) => {
+    const tasks = p.tasks || [];
+    const taskCount = tasks.length;
+    const completedCount = tasks.filter((t: any) => t.status === "done").length;
+    return {
+      ...p,
+      taskCount,
+      completedCount,
+      progress:
+        taskCount > 0 ? Math.round((completedCount / taskCount) * 100) : 0,
+    };
+  }) || [];
+
+const initialTaskCounts = {
+  todo: projects.reduce((acc, p) => {
+    // Tasks without status or with 'todo' status
+    const tasks = p.tasks || [];
+    return (
+      acc + tasks.filter((t: any) => !t.status || t.status === "todo").length
+    );
+  }, 0),
+  inProgress: projects.reduce((acc, p) => {
+    const tasks = p.tasks || [];
+    return acc + tasks.filter((t: any) => t.status === "in-progress").length;
+  }, 0),
+  done: projects.reduce((acc, p) => {
+    const tasks = p.tasks || [];
+    return acc + tasks.filter((t: any) => t.status === "done").length;
+  }, 0),
+};
+---
+
+<DashboardLayout title="Dashboard" currentPath="~/projects">
+  <!-- SIDEBAR DATA -->
+  <Fragment slot="sidebar-projects">
+    <SidebarProjects client:idle initialProjects={projects} />
+  </Fragment>
+  <div class="flex flex-col min-h-0 gap-4">
+    <Header />
+    <Stats
+      client:visible
+      initialProjectCount={projects.length}
+      initialTaskCounts={initialTaskCounts}
+    />
+    <QuickActions />
+    <ProjectSection client:load initialProjects={projects} />
+  </div>
+</DashboardLayout>
+
+<script>
+  // Modal open handlers
+  const openModalBtns = ["open-create-modal", "open-create-modal-empty"];
+
+  openModalBtns.forEach((btnId) => {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      btn.addEventListener("click", () => {
+        document.dispatchEvent(new CustomEvent("open-create-project-modal"));
+      });
+    }
+  });
+</script>
+
+<style is:global>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-theme-surface-2);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-theme-primary);
+  }
+
+  /* Line clamp utility */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

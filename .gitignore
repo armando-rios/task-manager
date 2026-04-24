@@ -1,4 +1,9 @@
-# Logs
+.astro/
+node_modules/
+dist/
+dist-ssr/
+*.local
+
 logs
 *.log
 npm-debug.log*
@@ -7,12 +12,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+.env
+.env.local
+.env.production
 
-# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -23,5 +26,3 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
-.env
-.env*.local

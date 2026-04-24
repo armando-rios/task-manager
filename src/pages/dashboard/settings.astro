@@ -1,0 +1,119 @@
+---
+// src/pages/dashboard/settings.astro
+export const prerender = false;
+
+import DashboardLayout from "@shared/components/layouts/DashboardLayout.astro";
+import SectionHeader from "@shared/components/dashboard/SectionHeader.astro";
+import SidebarItem from "@shared/components/ui/SidebarItem.astro";
+
+const { supabase } = Astro.locals;
+
+// Fetch All Projects for Sidebar
+const { data: projects } = await supabase
+  .from("projects")
+  .select("*")
+  .order("created_at", { ascending: true });
+
+const themes = [
+  { id: 'catppuccin', name: 'Catppuccin Mocha', desc: 'Soothing pastel theme for developers' },
+  { id: 'tokyo-night', name: 'Tokyo Night', desc: 'A clean, dark theme inspired by the night lights' },
+  { id: 'kanagawa', name: 'Kanagawa', desc: 'Old-world colors for a modern developer' },
+  { id: 'kanagawa-dragon', name: 'Kanagawa Dragon', desc: 'Deep, ink-inspired terminal aesthetic' },
+  { id: 'nord', name: 'Nord', desc: 'Arctic north-bluish palette for focused work' },
+];
+---
+
+<DashboardLayout title="System_Settings" currentPath="~/settings.conf">
+  
+  <Fragment slot="sidebar-projects">
+    {projects?.map((p) => (
+      <SidebarItem 
+        href={`/dashboard/projects/${p.id}`} 
+        label={p.title} 
+        prefix="./" 
+      />
+    ))}
+  </Fragment>
+
+  <div class="flex-1 flex flex-col min-h-0 h-full p-4 md:p-10 space-y-12 overflow-hidden text-theme-text-0">
+    
+    <section class="flex-1 flex flex-col min-h-0 space-y-8 overflow-hidden">
+      <div class="shrink-0">
+        <SectionHeader title="System Appearance" subtitle="Modify active terminal color palette" />
+      </div>
+
+      <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="theme-selector">
+          {themes.map(t => (
+            <button 
+              data-theme={t.id}
+              class="theme-btn w-full text-left p-6 rounded-2xl border transition-all group relative overflow-hidden flex flex-col gap-3 shadow-xl bg-theme-surface-1/40 border-theme-surface-3/30 hover:border-theme-primary/40"
+            >
+              <div class="flex justify-between items-center relative z-10">
+                <h4 class="font-black text-sm uppercase italic tracking-wider group-hover:text-theme-primary transition-colors">
+                  {t.name}
+                </h4>
+                <span class="active-indicator hidden text-[8px] font-black uppercase text-theme-primary animate-pulse">
+                  [Active]
+                </span>
+              </div>
+              
+              <p class="text-[10px] text-theme-text-1 font-bold opacity-60 italic leading-relaxed relative z-10">
+                {t.desc}
+              </p>
+
+              <div class="flex gap-2 relative z-10 mt-2">
+                 <div class="w-3 h-3 rounded-full border border-white/5 bg-theme-primary"></div>
+                 <div class="w-3 h-3 rounded-full border border-white/5 bg-theme-surface-3"></div>
+                 <div class="w-3 h-3 rounded-full border border-white/5 bg-theme-text-1 opacity-20"></div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.theme-btn');
+    
+    const updateUI = (currentTheme: string) => {
+      buttons.forEach(btn => {
+        const themeId = btn.getAttribute('data-theme');
+        const isActive = themeId === currentTheme;
+        const indicator = btn.querySelector('.active-indicator');
+        
+        if (isActive) {
+          btn.classList.add('bg-theme-primary/10', 'border-theme-primary');
+          btn.classList.remove('bg-theme-surface-1/40', 'border-theme-surface-3/30');
+          indicator?.classList.remove('hidden');
+        } else {
+          btn.classList.remove('bg-theme-primary/10', 'border-theme-primary');
+          btn.classList.add('bg-theme-surface-1/40', 'border-theme-surface-3/30');
+          indicator?.classList.add('hidden');
+        }
+      });
+    };
+
+    // Inicializar UI
+    const currentTheme = localStorage.getItem('theme') || 'catppuccin';
+    updateUI(currentTheme);
+
+    // Manejar Clics
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newTheme = btn.getAttribute('data-theme');
+        if (!newTheme) return;
+
+        // 1. Cambiar Clase en HTML (para que afecte a todo)
+        document.documentElement.className = newTheme;
+        
+        // 2. Persistir en LocalStorage
+        localStorage.setItem('theme', newTheme);
+        
+        // 3. Actualizar UI de botones
+        updateUI(newTheme);
+      });
+    });
+  </script>
+</DashboardLayout>

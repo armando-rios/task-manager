@@ -1,0 +1,81 @@
+---
+export const prerender = false;
+
+import DashboardLayout from "@shared/components/layouts/DashboardLayout.astro";
+import { ProjectHeader } from "@features/tasks/components/ProjectHeader";
+import { ListView } from "@features/tasks/components/ListView";
+import { SidebarProjects } from "@features/projects/components/SidebarProjects";
+
+const { id } = Astro.params;
+const { supabase } = Astro.locals;
+
+// Fetch Project Info
+const { data: project, error: pError } = await supabase
+  .from("projects")
+  .select("*")
+  .eq("id", id)
+  .single();
+
+if (pError || !project) return Astro.redirect("/dashboard");
+
+// Fetch Tasks for this project
+const { data: tasksData } = await supabase
+  .from("tasks")
+  .select("*")
+  .eq("project_id", id)
+  .order("sort_order", { ascending: true })
+  .order("created_at", { ascending: false });
+
+const tasks = (tasksData || []) as any[];
+
+// Fetch All Projects for Sidebar - ORDENADOS CRONOLÓGICAMENTE
+const { data: projects } = await supabase
+  .from("projects")
+  .select("*")
+  .order("created_at", { ascending: true });
+
+type View = "list" | "kanban";
+
+// Get view from URL params
+const rawView = Astro.url.searchParams.get("view");
+const view: View = rawView === "kanban" ? "kanban" : "list";
+
+// Task counts
+const todoCount = tasks.filter((t) => t.status === "todo").length;
+const inProgressCount = tasks.filter((t) => t.status === "in-progress").length;
+const doneCount = tasks.filter((t) => t.status === "done").length;
+
+const path = `~/projects/${project.title.replace(/\s+/g, "")}`;
+---
+
+<DashboardLayout title={project.title} currentPath={path}>
+  <Fragment slot="sidebar-projects">
+    <SidebarProjects
+      client:idle
+      initialProjects={projects || []}
+      currentProjectId={id}
+    />
+  </Fragment>
+
+  <!-- Project Content -->
+  <div
+    class="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden text-theme-text"
+  >
+    <!-- Project Header -->
+    <header class="shrink-0 mb-6">
+      <ProjectHeader
+        client:load
+        project={project}
+        view={view}
+        initialTodoCount={todoCount}
+        initialInProgressCount={inProgressCount}
+        initialDoneCount={doneCount}
+      />
+    </header>
+
+    <!-- Task View -->
+    <section class="flex-1 min-h-0 flex flex-col overflow-hidden h-full">
+      <ListView client:load initialTasks={tasks} projectId={project.id} />
+    </section>
+  </div>
+</DashboardLayout>
